@@ -1,0 +1,640 @@
+﻿
+@{
+    ViewBag.Title = "showCandidateInfo";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+
+<div ng-controller="candidatesCtrl">
+    <div class="ng-cloak">
+        <input type="hidden" value="@Request.QueryString["candidateId"]" id=candidateId />
+        <div class="modal fade" id="ModalChangeStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#f8f9fa;">
+                        <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Change Status</h5>
+                        <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="padding-left:0px !important;">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @*<div ng-include="'/Templates/Common/client.html'">
+
+                        </div>*@
+
+                        <form id="formModalChangeStatus">
+                            <div class="form-group form-inline">
+                                <div class="col-md-5">
+                                    <span>Select Candidate Status</span>
+                                    </div>
+                                <div class="col-md-7">
+                                    <select class="form-control  validate[required,'Please Select Candidate Status']" ng-model="c.csSubCatId" ng-options="c.csSubCatId as c.csSubCat group by c.csCat for c in listCSCat_SubCat" id="mcsts"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                                <div class="col-md-5">
+                                    <span>Job Opening</span>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" ng-model="c.positionTile" class="form-control" maxlength="50" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-md-5">
+                                    <span>Comments</span>
+                                </div>
+                                <div class="col-md-7">
+                                    <textarea cols="32" rows="3" ng-model="c.comments">
+
+                                    </textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="hideModalChangeStatus()">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="updateCandidateStatus()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <div class="card card-outline">
+                    <div class="card-header bg-gray-light">
+ 
+                        <h5>
+                            <a href="/Candidates/candidates">
+                            <span class="fa fa-long-arrow-left fa-lg">
+                                
+                            </span>
+                                </a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {{c.firstName}}
+                        </h5>
+                        
+     
+
+                    </div>
+                    <div class="form-group form-inline" style="margin-top:20px;">
+                        <div class="col-md-2">
+                            <span>
+                                Candidate Status
+                            </span>
+                        </div>
+                        <div class="col-md-4">
+                            <label style="background-color:seagreen; color:white"> {{c.csSubCat}}</label>
+                            for
+                            <label>{{c.positionTile}}</label>
+                            <span class="fa fa-refresh" ng-click="showModalChangeStatus()" style="cursor:pointer;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span>Mobile</span>
+                        </div>
+                        <div class="col-md-4">
+                            {{c.mobile}}
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span>Email</span>
+                        </div>
+                        <div class="col-md-4">
+                            {{c.email}}
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span>Secondary Email</span>
+                        </div>
+                        <div class="col-md-4">
+                            {{c.secondaryEmail}}
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span>Experience In Years</span>
+                        </div>
+                        <div class="col-md-4">
+                            {{c.experienceInYear}}
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span>Current Job Title</span>
+                        </div>
+                        <div class="col-md-4">
+                            {{c.currentJobTitle}}
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span>Skill Set</span>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                        <div class="col-md-2">
+                            <span style="color:blue; cursor:pointer;" ng-click="divCandidateInfo=true" ng-hide="divCandidateInfo">
+                                SHOW DETAILS
+                                <i class="fa fa-angle-down"></i>
+                            </span>
+
+                            <span style="color:blue; cursor:pointer;" ng-click="divCandidateInfo=false" ng-show="divCandidateInfo">
+                                HIDE DETAILS
+                                <i class="fa fa-angle-up"></i>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div ng-show="divCandidateInfo">
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;"> Basic Info </p>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Email</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control validate[required,'Please Enter Email'] Txtbox" id="em" ng-model="c.email" maxlength="50" disabled />
+                            </div>
+                            <div class="col-md-2">
+                                <span>First Name</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control validate[required,'Please Enter First Name'] Txtbox" id="fn" ng-model="c.firstName" maxlength="50" disabled/>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Middle Name</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.middleName" maxlength="50" disabled/>
+                            </div>
+
+                            <div class="col-md-2">
+                                <span>Last Name</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.lastName" maxlength="50" disabled/>
+
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Phone</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control validate[required,'Please Enter Phone'] Txtbox" id="ph" ng-model="c.phone" maxlength="10" numbers-only disabled/>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Mobile</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.mobile" maxlength="10" numbers-only disabled/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Secondary Email</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.secondaryEmail" maxlength="50" disabled/>
+                            </div>
+                        </div>
+
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;"> Address Information </p>
+
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Street</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="odt" ng-model="c.street" maxlength="100" disabled/>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Zip/Postal Code</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="odt" ng-model="c.postalCode" maxlength="50" disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>City</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.city" maxlength="50" disabled/>
+                            </div>
+                            <div class="col-md-2">
+                                <span>State/Province</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.state" maxlength="50" disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Country</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.country" maxlength="50" disabled/>
+                            </div>
+
+                        </div>
+
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;"> Professional Details </p>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Experience in Years</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.experienceInYear" maxlength="50" disabled/>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Highest Qualification</span>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" ng-model="c.quaId" ng-options="q.qualId as q.qualification   for q in listQualification" disabled>
+                                    <option value="Select">Select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Current Job Title</span>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" ng-model="c.currentJobTitle" disabled>
+                                    <option value="None">None</option>
+                                    <option value="Fresher">Fresher</option>
+                                    <option value="Project-Lead">Project-Lead</option>
+                                    <option value="Project-Manager">Project-Manager</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Current Employer</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.currentEmployer" maxlength="50" disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Expected Salary</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.expectedSalary" maxlength="12" valid-number disabled/>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Current Salary</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.currentSalary" maxlength="12" valid-number disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span>Skill Set</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="c.skillSet" maxlength="100" disabled/>
+                            </div>
+
+                        </div>
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;">Other Info </p>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+
+                            <div class="col-md-2">
+                                <span>Candidate Status</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control  validate[required,'Please Select Candidate Status']" ng-model="c.csSubCatId" ng-options="c.csSubCatId as c.csSubCat group by c.csCat for c in listCSCat_SubCat" id="csts" disabled></select>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Source</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-4">
+                                <select ng-options="s.sourceId as s.source for s in listSource" ng-model="c.sourceId" class="form-control  validate[required,'Please Select Source']" id="src"></select>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+
+                            <div class="col-md-2">
+                                <span>Candidate Owner</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control  validate[required,'Please Select Candidate Owner']" id="cdo" ng-model="c.recruiterId" ng-options="r.recruiterId as r.recruiterName for r in listRecruiter" disabled></select>
+                            </div>
+
+                        </div>
+
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;">
+                            Educational Details &nbsp;&nbsp;&nbsp;
+                            @*<a style="color:cornflowerblue; cursor:pointer; font-weight:500; font-size:17px;" ng-click="addInListEduDetails()">+Add Educational Details</a>*@
+                        </p>
+
+                        <div ng-repeat="ed in listEduDetail">
+                            @*<div class="form-group form-inline" style="margin-top:10px;">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="deleteEducationDetails($index,ed.eduId)" ng-disabled="btnSave==0" style="float:right;padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px !important;">
+                                        <i class="fa fa-remove"></i>
+                                    </button>
+                                </div>
+
+
+
+                            </div>*@
+
+
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+
+                                <div class="col-md-2">
+                                    <span>Institute/School</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="ed.institute" maxlength="100" disabled />
+                                </div>
+                                <div class="col-md-2">
+                                    <span>Major Department</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="ed.departmant" maxlength="100" disabled/>
+                                </div>
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+
+                                <div class="col-md-2">
+                                    <span>Degree</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="ed.degree" maxlength="100" disabled/>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>Currently Pursuing <input type="checkbox" ng-model="ed.currentlyPursuing" disabled/> </span>
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Duration</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <span>From</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <select ng-options="m for m in listMonth" ng-model="ed.fromMonth" class="form-control" disabled></select>
+                                </div>
+                                <div class="col-md-1">
+                                    <select ng-options="y for y in listYear" ng-model="ed.fromYear" class="form-control" disabled></select>
+                                </div>
+                                <div class="col-md-1">
+
+                                </div>
+
+
+                                <div class="col-md-1" ng-hide="ed.currentlyPursuing==true">
+                                    <span>To</span>
+                                </div>
+                                <div class="col-md-1" ng-hide="ed.currentlyPursuing==true">
+                                    <select ng-options="m for m in listMonth" ng-model="ed.toMonth" class="form-control" disabled></select>
+                                </div>
+                                <div class="col-md-1" ng-hide="ed.currentlyPursuing==true">
+                                    <select ng-options="y for y in listYear" ng-model="ed.toYear" class="form-control" disabled></select>
+                                </div>
+
+
+                            </div>
+                            @*<div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-sm" ng-click="deleteEducationDetails($index,ed.eduId)" ng-disabled="btnSave==0"><i class="fa fa-trash"></i>  Delete</button>
+                                    </div>
+
+
+
+                                </div>*@
+                            <hr />
+                        </div>
+
+
+
+
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;">
+                            Experience Details &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            @*<a style="color:cornflowerblue; cursor:pointer; font-weight:500; font-size:17px;" ng-click="addInListExpDetails()">+Add Experience Details</a>*@
+                        </p>
+
+                        <div ng-repeat="ex in listExpDetail">
+                            <div class="form-group form-inline" style="margin-top:10px;">
+                                @*<div class="col-md-12">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="deleteExperienceDetails($index,ed.eduId)" ng-disabled="btnSave==0" style="float:right;padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px !important;">
+                                        <i class="fa fa-remove"></i>
+
+                                    </button>
+                                </div>*@
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+
+                                <div class="col-md-2">
+                                    <span>Occupation / Title</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="ex.occupation" maxlength="100" disabled/>
+                                </div>
+                                <div class="col-md-2">
+                                    <span>Company</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="ex.company" maxlength="100" disabled/>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+
+                                <div class="col-md-2">
+                                    <span>Summery</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="ex.summery" maxlength="100" disabled/>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>I Currently work here <input type="checkbox" ng-model="ex.currentlyWork" disabled /> </span>
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Duration</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <span>From</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <select ng-options="m for m in listMonth" ng-model="ex.fromMonth" class="form-control" disabled></select>
+                                </div>
+                                <div class="col-md-1">
+                                    <select ng-options="y for y in listYear" ng-model="ex.fromYear" class="form-control" disabled></select>
+                                </div>
+                                <div class="col-md-1">
+
+                                </div>
+
+
+                                <div class="col-md-1" ng-hide="ex.currentlyWork==true">
+                                    <span>To</span>
+                                </div>
+                                <div class="col-md-1" ng-hide="ex.currentlyWork==true">
+                                    <select ng-options="m for m in listMonth" ng-model="ex.toMonth" class="form-control" disabled></select>
+                                </div>
+                                <div class="col-md-1" ng-hide="ex.currentlyWork==true">
+                                    <select ng-options="y for y in listYear" ng-model="ex.toYear" class="form-control" disabled></select>
+                                </div>
+
+
+                            </div>
+                            @*<div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-sm" ng-click="deleteExperienceDetails($index,ed.eduId)" ng-disabled="btnSave==0">
+                                            <i class="fa fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+
+                                </div>*@
+                        <hr />
+                        </div>
+                        <p style="font-weight:bold; padding-left:20px; font-size:20px;">Attachment </p>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span style="padding-left:15px;">Resume</span>
+                            </div>
+
+                            <div class="col-md-3" ng-hide="c.resume!=null && c.resume!=''">
+                                <input type="file" id="resume_single" accept=".pdf,.doc"/>
+                            </div>
+                            <div class="col-md-1" ng-hide="c.resume!=null && c.resume!=''">
+<button type="button" class="btn btn-sm btn-info"><span class="fa fa-upload" style="padding-left:0px !important;" ng-click="uploadResume()"> Upload</span> </button>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="~/Files/{{c.resume}}" ng-show="c.resume!=null && c.resume!=''" download> View Resume</a>
+                            </div>
+
+                        </div>
+
+                        @*<div class="form-group form-inline" style="margin-top:20px;">
+                            <div class="col-md-2">
+                                <span style="padding-left:15px;">Others</span>
+                            </div>
+
+                            <div class="col-md-2">
+                                <input type="file" id="others" />
+                            </div>
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-4">
+                                <a href="~/Files/{{c.others}}" ng-show="c.others!=null && c.others!=''" download>View Other Document</a>
+                            </div>
+
+                        </div>*@
+                        <!-- /.card-body -->
+                        @*<div class="card-footer" align="center" style="margin-top:40px;">
+                                &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" ng-click="saveJobOpeningInfo()" class="btn btn-success btn-sm">
+                                    <i class="fa fa-save"></i>
+                                    Save
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" ng-click="clear()" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-remove"></i>
+                                    Clear
+                                </button>
+                            </div>*@
+                    </div>
+                    <div class="ng-cloak">
+                        <div class="card-header">
+                            <div class="btn-group">
+                                <h5 style="font-weight:bold;">Interviews</h5>
+                            </div>
+                            <a style="color:cornflowerblue; cursor:pointer; font-weight:500; font-size:17px; float:right;" href="/Interviews/interviews?candidateId={{c.cId}}">+Schedule Interviews</a>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="table-responsive" style="max-height:200px;">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th>Interview Name</th>
+                                        <th>Candidate Name</th>
+                                        <th>Client Name</th>
+                                        <th>Interviewer</th>
+                                        <th>To</th>
+                                        <th>Interview Status</th>
+                                        <th>Others</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="in in listInterviews">
+                                        <td>{{in.interviewName}}</td>
+                                        <td>{{in.candidateName}}</td>
+                                        <td>{{in.clientName}}</td>
+                                        <td>{{in.accountManager}}</td>
+                                        <td>{{in.toDate}} &nbsp;{{in.toTime}}</td>
+                                        <td>{{in.interviewStatus}}</td>
+                                        <td>
+                                            <a href="~/Files/Interviews/{{in.others_Photo_Doc}}" download
+                                               ng-show="in.others_Photo_Doc!='' && in.others_Photo_Doc!=null">View Others</a>
+                                            <span ng-hide="in.others_Photo_Doc!='' && in.others_Photo_Doc!=null"> No Document Found</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+              
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Scripts/Angular/Controller/candidatesCtrl.js?v1"></script>
+}
+<style>
+    span { padding-left: 15px; }
+</style>
+
+
+

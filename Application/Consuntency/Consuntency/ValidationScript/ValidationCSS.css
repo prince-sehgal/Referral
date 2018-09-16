@@ -1,0 +1,13 @@
+﻿.validate input[required="required"], input[required="required,nummber"], input[required="nummber,mobile"], input[required="required,character"], input[required="required,emailId"], input[required="nummber"], input[required="character"], input[required="emailId"]
+{
+}
+
+.error
+{
+    border: 1px solid #f00 !important;
+}
+/*.error
+{
+ padding: 3px !important; border-radius: 0; font-size: 13px !important; border: 1px solid red; border-bottom-width: 1px; background-color: transparent;
+}*/
+

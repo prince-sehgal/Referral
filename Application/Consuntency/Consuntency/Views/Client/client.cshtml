@@ -1,0 +1,285 @@
+﻿
+@{
+    ViewBag.Title = "Clients";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+<div ng-controller="clientCtrl">
+    <form id="formClient" name="userForm">
+        <div>
+            <div class="ng-cloak" ng-show="divClient==0">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;">Create Client</h5>
+                                <div style="float:right; margin-top:-24px;">
+
+                                    <button type="button" ng-click="saveClient()" class="btn btn-primary btn-sm btn-flat" ng-disabled="btnSave==0">
+                              
+                                        Save
+                                    </button>
+                                    &nbsp;
+
+                                    <button type="button" ng-click="saveClient('n')" class="btn btn-default btn-sm btn-flat" ng-disabled="btnSave==0">
+                              
+                                        Save and New
+                                    </button>
+                                    &nbsp;
+                                    @*<button type="button" ng-click="clear()" class="btn btn-danger btn-sm" ng-disabled="btnSave==0">
+                                            <i class="fa fa-remove"></i>
+                                            Clear
+                                        </button>*@
+                                    <button class="btn btn-danger btn-sm btn-flat" ng-disabled="btnSave==0" ng-click="cancel()">
+                                        <i class="fa fa-remove"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                            </div>
+
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            @*<div ng-include="'/Templates/Common/client.html'">
+
+                            </div>*@
+
+
+                            <!-- /.card-body -->
+                       
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>Client Name</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" ng-model="c.clientName" class="form-control validate[required,''] Txtbox" id="cn" maxlength="50"  />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Website</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" ng-model="c.website" class="form-control" maxlength="50" />
+                                    </div>
+                                </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Assigned Team Lead</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+
+                                    <select class="form-control  validate[required,'Please Enter Assigned Team Lead']" id="rId" ng-options="r.recruitmetLeadId as r.recruitmetLeadName for  r in listRecruitmetLead"
+                                            ng-model="c.recruitmetLeadId"
+                                            ng-change="getRecruiter_byRecruitmetLeadId()"
+                                            ></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <span style="padding-left:15px;">Assigned Recruiter</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control validate[required,'Please Select Assigned Recruiter']" id="rcId"
+                                            ng-options="rc.recruiterId as rc.recruiterName for  rc in listRecruiter"
+                                            ng-model="c.recruiterId">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>                               
+
+                            </div>
+                              
+                            
+                            <p style="font-weight:bold; padding-left:10px; font-size:20px;">
+                                Account Manager
+                               &nbsp;&nbsp;&nbsp;
+                                <a style="color:cornflowerblue; cursor:pointer; font-weight:500; font-size:17px;" ng-click="addInlistAccountManager()">+Add Account Manager</a>
+                            </p>
+                            <div class="table-responsive" style="max-height:250px;">
+
+                                <div ng-repeat="a in listAccountManager track by $index">
+
+                                    <div class="form-group form-inline" style="margin-top:20px;">
+
+                                        <div class="col-md-2">
+                                            <span>Account Manager</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" ng-model="a.accountManager" maxlength="50" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <span>Contact Number</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" ng-model="a.contactNo" maxlength="10" numbers-only />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-danger btn-sm" ng-click="deleteClient_AccountManager(a.c_amId,$index)" ng-disabled="btnSave==0" style="float:right;padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px !important;">
+                                                <i class="fa fa-remove"></i>
+                                            </button>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="form-group form-inline" style="margin-top:20px;">
+                                        <div class="col-md-2">
+                                            <span>Email ID</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" ng-model="a.emailId" maxlength="50" />
+                                        </div>
+                                        </div>
+<hr />
+                                </div>
+                            </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>About Company</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" ng-model="c.aboutCompany" />
+                                    </div>
+                                </div>
+
+                    </div>
+                </div>
+            </div>
+                </div>
+
+            <div class="card ng-cloak" ng-show="divClient==1">
+        <div class="card-header bg-gray-light">
+            <div class="btn-group">
+                <h5 class="mb-0" style="font-weight:bold;">Clients</h5>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div style="height:4px;margin-top:-4px;">
+                    <button type="button" class="btn btn-light btn-sm btn-flat" ng-click="editClient()" ng-disabled="btnEdit==0">Edit</button>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div style="height:4px;margin-top:-4px;">
+                    <button type="button" class="btn btn-danger btn-sm btn-flat" ng-disabled="btnDelete==0" ng-click="deleteClient()">
+                        <i class="fa fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+            <div style="float:right; margin-right:40px; height:30px;">
+                <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="new()" ng-show="btnNew==1">
+                    <i class="fa fa-plus"></i>
+                    New
+                </button>
+
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive">
+            <table id="example1" class="dataTable table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="width:10px;"><input type="checkbox" ng-model="chkboxHeader" ng-change="allChkboxChecked_UnChecked()"
+                                   style="cursor:pointer;" /> </th>
+                        <th>CLIENT NAME</th>
+                        <th>Team Lead</th>
+                        <th>Recruiter</th>
+                        <th>ACCOUNT Manager Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="cl in listClient" ng-show="listClient.length>0">
+                        <td><input type="checkbox" ng-model="cl.chkbox" ng-change="checkEditDelete()" 
+                                   style="cursor:pointer;"/> </td>
+
+                        <td>{{cl.clientName}}</td>
+                        <td>{{cl.recruitmetLeadName}}</td>
+                        <td>{{cl.recruiterName}}</td>
+                        <td>
+                        @*<button type="button" class="btn btn-link btn-sm" ng-click="showModalAccountManager(cl.clientId)">View Details</button>*@
+                            <a href="#" ng-click="showModalAccountManager(cl.clientId)">
+                                View Details
+                               </a>
+                         </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
+                <div ng-hide="listClient.length>0">
+                    <p style="text-align:center;">
+                        No Record Available.
+
+                    </p>
+                </div>
+                <div class="modal fade" id="ModalAccountManager" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color:#f8f9fa;">
+                                <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">
+                                    Account Manager  Details
+                                </h5>
+                                <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" style="padding-left:0px !important;">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                           
+                                    <div ng-show="temp_listAM.length==0 ||temp_listAM.length==null">
+                                        <hr />
+                                        <p style="text-align:center;">No Details found</p>
+                                    </div>
+                                    <div class="card-body table-responsive" style="max-height:250px;" ng-show="temp_listAM.length>0">
+
+                                        <table  class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th> Account Manager</th>
+                                                    <th>CONTACT NUMBER</th>
+                                                    <th>Email ID</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="t in temp_listAM">
+                                                    <td>{{t.accountManager}}</td>
+                                                    <td>{{t.contactNo}}</td>
+                                                    <td>{{t.emailId}}</td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+        <!-- /.card-body -->
+    </div>
+
+
+    </form>
+</div>
+@section scripts{
+<script src="~/Scripts/Angular/Controller/client.js?v1"></script>
+}
+<style>
+    span { padding-left: 15px; }
+</style>
+
+
+
+

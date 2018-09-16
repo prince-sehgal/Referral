@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "sendEmail";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+<div ng-controller="sendEmailCtrl">
+    <form id="formSendEmail">
+        <div>
+            <input type="hidden" value="@Request.QueryString["candidateIds"]" id="candidateIds"/>
+            <div class="ng-cloak">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;">Send Email</h5>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                            </div>
+
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-3">
+                                    <span>From</span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <input type="text" value=@MySession.userName  class="form-control" disabled="disabled"/>
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-3">
+                                    <span>To</span>
+                                </div>
+
+                                <div class="col-md-9">
+                                    <span style="padding-left:0px !important;" ng-repeat="em in listEmailId">
+                                        {{em}}
+                                    </span>
+                                    <hr />
+                                    @*<input type="text" ng-model="e.subject" class="form-control validate[required,''] Txtbox" id="subject" maxlength="100" />*@
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-3">
+                                    <span>Choose Email Template</span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <select class="form-control" ng-options="e.etId as e.title for e in listET" ng-model="etId"
+                                            ng-change="getEmailTemplate_byEtId()">
+
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-3">
+                                    <span>Subject</span>
+                                </div>
+
+                                <div class="col-md-9">
+                                    <input type="text" ng-model="e.subject" class="form-control" />
+                                </div>
+
+                            </div>
+                            <h5 style="text-align:center;font-weight: 500;
+    font-family: initial;">
+                                Description
+                            </h5>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-12">
+                                    <textarea class="ckeditor" ck-editor ng-model="e.description"></textarea>
+                                </div>
+
+                            </div>                            
+                  
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+     
+
+     
+        </div>
+    </form>
+</div>
+@section scripts{
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/Angular/Controller/sendEmailCtrl.js"></script>
+}
+
+<style>
+    span { padding-left: 15px; }
+</style>
+

@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <form>
+        <div class="form-group form-inline">
+            <div class="col-md-3">
+                <span>Client Name</span>
+            </div>
+            <div class="col-md-9">
+                <input type="text" ng-model="c.clientName" class="form-control validate[required,''] Txtbox" id="cn" />
+            </div>
+        </div>
+        <div class="form-group form-inline">
+            <div class="col-md-3">
+                <span>Contact Number</span>
+            </div>
+            <div class="col-md-9">
+                <input type="text" ng-model="c.contactNo" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group form-inline">
+            <div class="col-md-3">
+                <span>Website</span>
+            </div>
+            <div class="col-md-9">
+                <input type="text" ng-model="c.website" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group form-inline">
+            <div class="col-md-3">
+                <span>Assigned Team Lead</span>
+            </div>
+            <div class="col-md-9">
+                <select class="form-control  validate[required,'Please Enter Assigned Team Lead']" id="rId" ng-options="r.recruitmetLeadId as r.recruitmetLeadName for  r in listRecruitmetLead"
+                        ng-model="c.recruitmetLeadId"></select>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

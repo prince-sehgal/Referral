@@ -1,0 +1,5 @@
+C:\Adroit\Application\AdroitApp\Libraries\obj\Debug\Libraries.csprojResolveAssemblyReference.cache
+C:\Adroit\Application\AdroitApp\Libraries\bin\Debug\Libraries.dll
+C:\Adroit\Application\AdroitApp\Libraries\bin\Debug\Libraries.pdb
+C:\Adroit\Application\AdroitApp\Libraries\obj\Debug\Libraries.dll
+C:\Adroit\Application\AdroitApp\Libraries\obj\Debug\Libraries.pdb

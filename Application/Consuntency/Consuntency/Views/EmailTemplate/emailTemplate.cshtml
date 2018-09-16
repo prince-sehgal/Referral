@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "Email Template";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+<div ng-controller="emailTemplateCtrl">
+    <form id="formEmailTemplate">
+        <div>
+            <div class="ng-cloak" ng-show="divEmailTemplate==0">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;">Create Email Template</h5>
+                                <div style="float:right; margin-top:-24px;">
+
+                                    <button type="button" ng-click="saveEmailTemplate(); co.preName='None'" class="btn btn-primary btn-sm btn-flat" ng-disabled="btnSave==0">
+
+                                        Save
+                                    </button>
+                                    &nbsp;
+
+                                    <button type="button" ng-click="saveEmailTemplate('n')" class="btn btn-default btn-sm btn-flat" ng-disabled="btnSave==0">
+
+                                        Save and New
+                                    </button>
+                                    &nbsp;
+                                    <button class="btn btn-danger btn-sm btn-flat" ng-disabled="btnSave==0" ng-click="cancel()">
+                                        <i class="fa fa-remove"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                            </div>
+
+                            
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Title</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <input type="text" ng-model="e.title" class="form-control validate[required,''] Txtbox" id="title" maxlength="50" />
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>subject</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <input type="text" ng-model="e.subject" class="form-control validate[required,''] Txtbox" id="subject" maxlength="100" />
+                                </div>
+
+                            </div>
+                            <h5 style="text-align:left;font-weight: 500;padding-left:20px; font-weight:bold;
+    font-family: initial;">
+                                Description
+                            </h5>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-12">
+                                    <textarea class="ckeditor" ck-editor ng-model="e.description" ></textarea>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card ng-cloak" ng-show="divEmailTemplate==1">
+                <div class="card-header bg-gray-light">
+                    <div class="btn-group">
+                        <h5 class="mb-0" style="font-weight:bold;">Email Template</h5>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-light btn-sm btn-flat" ng-click="editContact()" ng-disabled="btnEdit==0">Edit</button>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-danger btn-sm btn-flat" ng-disabled="btnDelete==0" ng-click="deleteEmailTemplate()">
+                                <i class="fa fa-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+
+                    </div>
+                    <div style="float:right; margin-right:40px; height:30px;">
+                        <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="new()" ng-show="btnNew==1">
+                            <i class="fa fa-plus"></i>
+                            New
+                        </button>
+
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive">
+                    <table class="dataTable table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:10px;"><input type="checkbox" ng-model="chkboxHeader" ng-change="allChkboxChecked_UnChecked()" style="cursor:pointer;" /> </th>
+                             <th>Title</th>
+                                <th>Subject</th>
+                               <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="et in listET" ng-show="listET.length>0">
+                                <td><input type="checkbox" ng-model="et.chkbox" ng-change="checkEditDelete()" style="cursor:pointer;" /> </td>
+                                <td>{{et.title}}</td>
+                                <td>{{et.subject}}</td>
+                               <td>
+                                   <a href="#"  ng-click="showModalDescription(et.description)">View</a>
+                               </td> 
+                            </tr>
+
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+                <div ng-hide="listET.length>0">
+                    <p style="text-align:center;">
+                        No Record Available.
+
+                    </p>
+                </div>
+                <!-- /.card-body -->
+            </div>
+
+            <div class="modal fade" id="ModalDescription" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#f8f9fa;">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Description</h5>
+                            <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" style="padding-left:0px !important;">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body table-responsive" style="max-height:300px;">
+                  
+@*<div ng-bind-html="tempDescription">
+
+    </div>*@                                
+                            <div data-ng-bind-html="trustAsHtml(tempDescription)"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+ <script src="~/Scripts/Angular/Controller/emailTemplateCtrl.js?v1"></script>
+    @*<script type="text/javascript">
+            $(function () {
+          $("#example1").DataTable();
+          $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+          });
+        });
+          </script>*@
+}
+<style>
+    span { padding-left: 15px; }
+</style>
+
+
+
+

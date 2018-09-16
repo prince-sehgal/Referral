@@ -1,0 +1,293 @@
+﻿
+@{
+    ViewBag.Title = "Manage User";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+@*<h2>ManageUser</h2>*@
+@*<style>
+        select.form-control:not([size]):not([multiple]) {
+        height: calc(2.25rem + 7px);
+        width:calc(2.25rem + 160px);
+    }
+    </style>*@
+
+    
+<div ng-controller="manageUserCtrl">
+    <form id="formManageUser">
+        <div>
+           
+            <div class="ng-cloak" ng-show="divET==0">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;">Create User</h5>
+                                <div style="float:right; margin-top:-24px;">
+
+                                    <button type="button" ng-click="saveUser()" class="btn btn-primary btn-sm btn-flat" ng-disabled="btnSave==0">
+                                        @*<i class="fa fa-save"></i>*@
+                                        Save
+                                    </button>
+                                    &nbsp;
+
+                                    <button type="button" ng-click="saveUser('n')" class="btn btn-default btn-sm btn-flat" ng-disabled="btnSave==0">
+                                        @*<i class="fa fa-save"></i>*@
+                                        Save and New
+                                    </button>
+                                    &nbsp;
+                                    @*<button type="button" ng-click="clear()" class="btn btn-danger btn-sm" ng-disabled="btnSave==0">
+                                            <i class="fa fa-remove"></i>
+                                            Clear
+                                        </button>*@
+                                    <button class="btn btn-danger btn-sm btn-flat" ng-disabled="btnSave==0" ng-click="cancel()">
+                                        <i class="fa fa-remove"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                            </div>
+
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>First Name</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter First Name'] Txtbox" id="fn" ng-model="u.firstName" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Last Name</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                            <input type="text" class="form-control" ng-model="u.lastName"  maxlength="50"/>
+                                    </div>
+                                </div>
+                                <div class="clearfix">
+
+                                </div>
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>Email ID</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter Valid Email'] Txtbox" id="em" ng-model="u.emailId" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Email Password</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="password" class="form-control validate[required,''] Txtbox" id="emP" ng-model="u.emailPassword" maxlength="50" />
+                                    </div>
+                                    
+                                </div>
+                                <div class="clearfix">
+
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>Mobile No</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter Correct Contact No'] Txtbox" id="mb" ng-model="u.mobileNo" maxlength="10"
+                                               numbers-only />
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span for="exampleInputPassword1">Password</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="password" class="form-control validate[required,'Please Enter Password'] Txtbox" id="p" ng-model="u.password" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span for="exampleInputPassword1">Confirm Password</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="password" class="form-control validate[required,'Please Enter Confirm Password'] Txtbox" id="cp" ng-model="u.confirmPassword" maxlength="50" />
+                                    </div>
+
+                                </div>
+                                <div class="clearfix">
+
+                                </div>
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>Role</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control validate[required,'Please Select Role']" id="r"
+                                                ng-change="addClassOnRecruitmetLead()"
+                                                ng-model="u.role">
+                                            <option value="">Select</option>
+                                            <option value="Recruitmet Lead">Recruitmet Lead</option>
+                                            <option value="Recruiter">Recruiter</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Status</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select ng-model="u.status" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="DeActive">DeActive</option>
+                                        </select>
+                                    </div>
+
+
+                                </div>
+                                <div class="clearfix">
+
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;" ng-show="u.role=='Recruitmet Lead'">
+                                    <div class="col-md-2">
+                                        <span>Manager Name</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text"  class="form-control" ng-model="u.managerName" id="mn" maxlength="50"/>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix">
+
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;" ng-show="u.role=='Recruiter'">
+                                    <div class="col-md-2">
+                                        <span>Recruitmet Lead</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" id="rId"
+                                                ng-options="r.recruitmetLeadId as r.recruitmetLeadName for  r in listRecruitmetLead"
+                                                ng-model="u.recruitmetLeadId"></select>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix">
+
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span for="exampleInputPassword1">Port Number</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="u.portNo" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>SMTP Server</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="u.smtpServer" />
+                                    </div>
+                                </div>
+
+                                <div class="clearfix">
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card ng-cloak" ng-show="divET==1">
+                <div class="card-header bg-gray-light">
+                    <div class="btn-group">
+                        <h5 class="mb-0" style="font-weight:bold;">Manage User</h5>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-light btn-sm btn-flat" ng-click="editUser()" ng-disabled="btnEdit==0">Edit</button>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-danger btn-sm btn-flat" ng-disabled="btnDelete==0" ng-click="deleteUser()">
+                                <i class="fa fa-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+
+                    </div>
+                    <div style="float:right; margin-right:40px; height:30px;">
+                        <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="new()" ng-show="btnNew==1">
+                            <i class="fa fa-plus"></i>
+                            New
+                        </button>
+                        
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive">
+                    <table @*id="example"*@ class="dataTable table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" ng-model="chkboxHeader" ng-change="allChkboxChecked_UnChecked()" style="cursor:pointer;" /> </th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email Id</th>
+                                
+                                @*<th>Password</th>*@
+                                <th>Mobile No</th>
+                                <th>Role</th>
+                                <th>Manager Name</th>
+                                <th>Recruitmet Lead</th>
+                                <th>Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="us in listUser" >
+                                <td><input type="checkbox" ng-model="us.chkbox" ng-change="checkEditDelete()" style="cursor:pointer;" /> </td>
+                                <td>{{us.firstName}}</td>
+                                <td>{{us.lastName}}</td>
+                                <td>{{us.emailId}}</td>
+                                @*<td>{{us.password}}</td>*@
+                                <td>{{us.mobileNo}}</td>
+                                <td>{{us.role}}</td>
+                                <td>{{us.managerName}}</td>
+                                <td>{{us.recruitmetLeadName}}</td>
+                                <td>{{us.status}}</td>
+                            </tr>
+                            
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+                <div ng-hide="listUser.length>0">
+                    <p  style="text-align:center;">
+                        No Record Available.
+
+                    </p>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+    <script src="~/Scripts/Angular/Controller/manageUserCtrl.js?v1"></script>
+
+}
+<style>
+    span { padding-left: 15px; }
+</style>

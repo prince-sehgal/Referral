@@ -1,0 +1,322 @@
+﻿
+@{
+    ViewBag.Title = "associateCandidate";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+
+<div ng-controller="associateJob_To_CandidateCtl">
+    <form id="formAssCand">
+        <input type="hidden" value="@Request.QueryString["joiId"]" id="joiId"/>
+        <input type="hidden" value="@Request.QueryString["ass"]" id="ass" />
+        <div>
+            <div class="container-fluid ng-cloak">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;"> 
+                                    <div style="float:right;">
+                                    <div class="dropdown">
+                                        <button class="btn  dropdown-toggle" type="button" id="actionButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:darkgreen; background-color:white; border:1px solid;">
+                                            Actions
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">Associate Candidates</a>
+                                    
+                                        </div>
+                                    </div>
+                                        </div>
+                                </h5>
+
+                            </div>
+
+                            <div>
+                            </div>
+
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Job Opening Status</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label style="background-color:seagreen; color:white"> {{j.jobOpeningStatus}}</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-md-2">
+                                    <span>Contact Name</span>
+                                </div>
+                                <div class="col-md-4">
+                                    {{ j.contactName}}
+                                </div>
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-md-2">
+                                    <span>Target Date</span>
+                                </div>
+                                <div class="col-md-4">
+
+                                    {{j.targetDT}}
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-md-2">
+                                    <span>City</span>
+                                </div>
+                                <div class="col-md-4">
+                                    {{j.city}}
+
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-md-2">
+                                    <span>Assigned Recruiter(s)</span>
+                                </div>
+                                <div class="col-md-4">
+                                    {{j.recruiterName}}
+
+                                </div>
+
+                            </div>
+                            <br />
+                            <div class="form-group form-inline">
+                                <div class="col-md-2">
+                                    <span style="color:blue; cursor:pointer;" ng-click="divJoi=true" ng-hide="divJoi">SHOW DETAILS
+                                        <i class="fa fa-angle-down"></i></span>
+                                    
+                                    <span style="color:blue; cursor:pointer;" ng-click="divJoi=false" ng-show="divJoi">HIDE DETAILS
+                                        <i class="fa fa-angle-up"></i></span>
+                                    
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+
+                            <div ng-show="divJoi">
+                                <div class="form-group form-inline" style="margin-top:20px;">
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Position Title</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter Position Tile'] Txtbox" id="pt" ng-model="j.positionTile" maxlength="50" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Client Name</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+
+                                    <div class="col-md-4 input-group">
+                                      <input type="text" class="form-control" ng-model="j.clientName" readonly/>
+
+
+                                    
+
+
+                                    </div>
+
+                                </div>
+                                @*<div class="form-control form-inline">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="c in listClient |filter:{clientName:j.clientName}">
+                                        {{c.clientName}}
+                                    </li>
+                                </ul>
+
+                            </div>*@
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Assigned Team Lead</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" ng-model="j.recruitmetLeadName" readonly="readonly"  class="form-control"/>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Assigned Recruiter</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                       <input type="text" class="form-control" ng-model="j.recruiterName" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Target Date</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.targetDT" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Job Opening Status</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.jobOpeningStatus" readonly="readonly"/>
+                                        
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Contact Name</span>
+                                    </div>
+                                    <div class="col-md-4 input-group">
+                                        <input type="text"  ng-model="j.contactName" class="form-control" readonly="readonly"/>
+                                    
+
+
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Account Manager</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter Account Manager'] Txtbox" id="am" ng-model="j.accountManager" maxlength="50" readonly="readonly" />
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Date Opened</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="odt" ng-model="j.openedDT"  readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Job Type</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text"  class="form-control" ng-model="j.jobType" readonly="readonly"/>
+                                    </div>
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">City</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter City']" id="city" ng-model="j.city" maxlength="50" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">State</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter State']" id="sta" ng-model="j.state" maxlength="50" readonly="readonly"/>
+                                    </div>
+                                </div>
+
+                                <p style="font-weight:bold; padding-left:10px; font-size:20px;"> Work Experience </p>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Min Experience</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.minWorkExperience" maxlength="50" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Max Experience</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.maxWorkExperience" maxlength="50" readonly="readonly"/>
+                                    </div>
+                                </div>
+                                <p style="font-weight:bold; padding-left:10px; font-size:20px;"> Salary </p>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Min CTC</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.minCTC" valid-number maxlength="10" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Max CTC</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.maxCTC" valid-number maxlength="10" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Number Of Positions</span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.noOfPositions" maxlength="10" readonly="readonly"/>
+                                    </div>
+
+                                </div>
+                                <br />
+                                <h5 style="text-align:center;font-weight: 500;
+    font-family: initial;">
+                                    Job Description
+                                </h5>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-12">
+                                        <textarea class="ckeditor" ck-editor ng-model="j.jobDesc" readonly="readonly"></textarea>
+                                    </div>
+
+                                </div>
+
+                                @*<div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Job Summery</span>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                      
+                                        <input type="file" id="jobSummeryPhoto" />
+                                    </div>
+                                    <div class="col-md-1">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="~/Files/{{j.jobSummery}}" ng-show="j.jobSummery!=null && j.jobSummery!=''" download>View Job Summery</a>
+                                    </div>
+
+                                </div>*@
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </form>
+</div>
+@section scripts{
+  <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/Angular/Controller/associateJob_To_CandidateCtl.js"></script>
+<script>
+    $('#actionButton').trigger('click');
+    $('#actionButton').trigger('click');
+            console.log('sdf');
+
+</script>
+}
+<style>
+    span { padding-left: 15px; }
+</style>
+

@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "associateCandidate";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+<div ng-controller="associateJob_To_CandidateCtl">
+    <form id="formCandidates">
+        <input type="hidden" value="@Request.QueryString["joiIds"]" id="joiIds"/>
+        <input type="hidden" value="@Request.QueryString["ass"]" id="ass" />
+        <div>
+            <div class="card ng-cloak">
+                <div class="card-header bg-gray-light">
+                    <div class="btn-group">
+                        <h5 class="mb-0" style="font-weight:bold;">Associate Candidates to @Request.QueryString["positionTitle"]</h5>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-sm" style="color:darkgreen; border:2px solid; background-color:white;" ng-click="showModalAssJobOPening()" ng-show="btnSave==1">Associate now</button>
+                            </div>
+                        </div>
+                    
+                    
+                </div>
+                
+                <div class="card-body table-responsive" style="max-height:550px;">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" ng-model="chkboxHeader_forAssCandidate" ng-change="allChkboxChecked_UnChecked_forAssCandidate()"
+                                           style="cursor:pointer;" />
+                                </th>
+                                <th>Candidate Name</th>
+                                <th>Current Job Title</th>
+                                <th>City</th>
+                                <th>Candidate Status</th>
+                                <th>Source</th>
+                                <th>Expected Salary</th>
+                                <th>Current Salary</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cd in listCandidates" ng-show="listCandidates.length>0">
+                                <td><input type="checkbox" ng-model="cd.chkbox_forAssCandidate" ng-change="set_btnSave_Enable_forAssCandidate()" style="cursor:pointer;" /> </td>
+                                <td>{{cd.firstName}}</td>
+                                <td>{{cd.currentJobTitle}}</td>
+                                <td>{{cd.city}}</td>
+                                <td>
+                                    {{cd.csSubCat}}
+                                    <span ng-show="cd.positionTile!=null && cd.positionTile!='' && cd.positionTile!=undefined">for&nbsp;  <strong> {{cd.positionTile}}</strong></span>
+                                </td>
+                                <td>{{cd.source}}</td>
+                                <td>{{cd.expectedSalary}}</td>
+                                <td>{{cd.currentSalary}}</td>
+                                
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+                <div ng-hide="listCandidates.length>0">
+                    <p style="text-align:center;">
+                        No Record Available.
+
+                    </p>
+                </div>
+
+                <!-- /.card-body -->
+            </div>
+
+        </div>
+        <div class="modal fade" id="ModalAssJobOPening" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#f8f9fa;">
+                        <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">
+                            Associate Job Opening
+                        </h5>
+                        <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="padding-left:0px !important;">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+
+
+                        <div class="form-group form-inline" style="margin-top:18px;">
+
+                            <div class="col-md-3">
+                                <span style="padding-left:0px !important;"> Select Candidate Status</span>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control  validate[required,'Please Select Candidate Status']" ng-model="csSubCatId" ng-options="c.csSubCatId as c.csSubCat group by c.csCat for c in listCSCat_SubCat" id="csts"></select>
+                            </div>
+
+                        </div>
+                        <div class="form-group form-inline" style="margin-top:20px;">
+
+                            <div class="col-md-3">
+                                <span style="padding-left:0px !important;"> Comments</span>
+                            </div>
+                            <div class="col-md-6">
+                                <textarea cols="50" rows="5" placeholder="Enter your Comments" ng-model="comments"></textarea>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-flat btn-sm" ng-click="saveAssociateJob_To_Candidate()">Associate</button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-default btn-flat btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+@section scripts{
+
+    <script src="~/Scripts/Angular/Controller/candidatesCtrl.js"></script>
+<script src="~/Scripts/Angular/Controller/associateJob_To_CandidateCtl.js"></script>
+    <script>
+        $('#dropdownMenuButton').trigger('click');
+        $('#dropdownMenuButton').trigger('click');
+            
+    </script>
+}
+
+<style>
+    span { padding-left: 15px; }
+</style>

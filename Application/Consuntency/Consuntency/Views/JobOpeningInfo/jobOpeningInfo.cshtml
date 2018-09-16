@@ -1,0 +1,852 @@
+﻿
+@{
+    ViewBag.Title = "Job Openings";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+
+@*<style>
+        select.form-control:not([size]):not([multiple]) { height: calc(2.25rem + 7px); width: calc(2.25rem + 170px); }
+    </style>*@  
+
+
+<div ng-controller="jobOpeningInfoCtrl">
+
+    <!--start modal save client-->
+    <div class="modal fade" id="saveClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f8f9fa;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Quick Create:Client</h5>
+                    <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @*<div ng-include="'/Templates/Common/client.html'">
+
+                        </div>*@
+
+                    <form id="formModelClient">
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+
+                                <span>Client Name</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="c.clientName" class="form-control validate[required,''] Txtbox" id="mcn" maxlength="50"/>
+                            </div>
+                        </div>
+                     
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Website</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="c.website" class="form-control" maxlength="50"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Assigned Team Lead</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <select class="form-control  validate[required,'Please Enter Assigned Team Lead']" id="matl" ng-options="r.recruitmetLeadId as r.recruitmetLeadName for  r in listRecruitmetLead"
+                                        ng-model="c.recruitmetLeadId"
+                                        ng-change="getRecruiter_byRecruitmetLeadId('c')"></select>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Assigned Recruiter</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <select class="form-control validate[required,'Please Select Assigned Recruiter']" id="mrcId"
+                                        ng-options="rc.recruiterId as rc.recruiterName for  rc in listRecruiter_forCl"
+                                        ng-model="c.recruiterId">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                        </div>
+                
+                        <p style="font-weight:bold; padding-left:10px; font-size:20px;">
+                            Account Manager
+                            &nbsp;&nbsp;&nbsp;
+                            <a style="color:cornflowerblue; cursor:pointer; font-weight:500; font-size:17px;" ng-click="addInlistAccountManager()">+Add Account Manager</a>
+                        </p>
+                        <div style="max-height:150px;" class="table-responsive">
+                        <div ng-repeat="a in listAccountManager track by $index">
+
+                            <div class="form-group form-inline">
+
+                                <div class="col-md-2">
+                                    <span>Account Manager</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="a.accountManager" maxlength="50" />
+                                </div>
+                                <div class="col-md-2">
+                                    <span>Contact Number</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="a.contactNo" maxlength="15" />
+                                </div>
+
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="deleteClient_AccountManager(a.c_amId,$index)" ng-disabled="btnSave==0" style="float:right;padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px !important;">
+                                        <i class="fa fa-remove"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Email ID</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="a.emailId" maxlength="50" />
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                            </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>About Company</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" ng-model="c.aboutCompany" maxlength="500" />
+
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="hide_Modal()">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="saveClient('a')">Save and Associate</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="saveClient()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end save modal client-->
+    <!--modal get client-->
+    <div class="modal fade" id="getClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f8f9fa;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Quick Create:Client</h5>
+                    <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        @*<div class="input-group margin-bottom-sm">
+                                <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                                <input class="form-control" type="text" placeholder="Email address">
+                            </div>*@
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Show:</span>
+                            </div>
+                            <div class="col-md-6 input-group margin-bottom-sm">
+                                <input type="text" ng-model="searchClient" class="form-control" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="show_saveClientModal()">
+                                    <i class="fa fa-plus"></i>
+                                    New Client
+                                </button>
+                            </div>
+                        </div>
+                        <div ng-show="listClient.length==0 ||listClient.length==null">
+                            <hr />
+                            <p style="text-align:center;">No Client found</p>
+                        </div>
+                        <div class="card-body table-responsive" style="max-height:250px;" ng-show="listClient.length>0">
+
+                            <table id="example1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th> CLIENT NAME</th>
+                                        <th>Team Lead</th>
+                                        <th>Recruiter</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cl in listClient|filter:{clientName:searchClient}">
+                                        <td>
+                                            <input type="radio" name="client"  ng-checked="cl.isChecked"
+                                                    ng-click="j.clientId=cl.clientId; co.clientId=cl.clientId; getContact(cl.clientId); hide_Modal();setRecruiterLeadId_and_Recruiter_byClientId();" style="cursor:pointer;"/> 
+                                            @*{{cl.isChecked}}*@
+                                        </td>
+                                        <td>{{cl.clientName}}</td>
+                                        <td>{{cl.recruitmetLeadName}}</td>
+                                        <td>{{cl.recruiterName}}</td>
+
+                                    </tr>
+
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal end get client-->
+
+    <!--start modal save contact-->
+    <div class="modal fade" id="saveContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f8f9fa;">
+                    <h5 class="modal-title" id="exampleModalLabel">Quick Create:Contact</h5>
+                    <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @*<div ng-include="'/Templates/Common/contact.html'">
+
+                        </div>*@
+                    <form id="formModelContact">
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>
+                                    First Name
+                                </span>
+                                <i style="color:red;">*</i>
+                            </div>
+
+                            <div class="col-md-2">
+                                <select ng-model="co.preName" class="form-control">
+                                    <option>-None-</option>
+                                    <option>Mr.</option>
+                                    <option>Mrs.</option>
+                                    <option>Ms.</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" ng-model="co.firstName" class="form-control validate[required,''] Txtbox" id="mfn" maxlength="50" />
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Last Name</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="co.lastName" class="form-control" maxlength="50" />
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Client Name</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <select ng-options="c.clientId as c.clientName for c in listClient" ng-model="co.clientId" class="form-control validate[required,'']" id="mclientN"
+
+                                         @*ng-change="j.clientId=co.clientId;"*@
+                                        >
+                                    <option value="">Select</option>
+                                </select>
+                                @*<select  ng-options="c.clientId as c.clientName for c in listClient" ng-model="co.clientId" class="form-control"  ng-change="j.clientId=co.clientId; isBlank(co.clientId)" 
+                             ng-style="selectErr==true && { 'border': '1px solid #f00'}"
+                                        ></select>*@
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Email</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="co.email" class="form-control validate[required,''] Txtbox" id="memail" maxlength="50" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Work Phone</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="co.workPhone" class="form-control" maxlength="15" />
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Mobile</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="co.mobile" class="form-control" maxlength="10" numbers-only />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="hide_Modal()">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="saveContact('a')">Save and Associate</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="saveContact()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!--end save modal contact-->
+   <!-- modal get contact-->
+    <div class="modal fade" id="getContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f8f9fa;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Quick Create:Contact</h5>
+                    <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        @*<div class="input-group margin-bottom-sm">
+                                <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                                <input class="form-control" type="text" placeholder="Email address">
+                            </div>*@
+                        <div class="form-group form-inline">
+                            <div class="col-md-1">
+                                <span>Show:</span>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" ng-change="getContact(j.clientId)" ng-model="cr_al">
+                                    <option ng-show="j.clientId>0" value="cr">
+                                        Contact related to {{contactRelated}}
+                                    </option>
+                                    <option value="al">All Contacts</option>
+                                </select>
+                            </div>
+                            @*<div class="col-md-2">
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown" >
+                                        <i ng-show="j.clientId>0" >
+                                  Contact related to aaaaa{{}}</i>
+                                        <i ng-show="j.clientId==0 || j.clientId==null">All Contacts</i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item"> Contact related to aaaaa {{}}</a>
+                                        <a class="dropdown-item" href="#">All Contacts</a>
+
+                                    </div>
+                                </div>
+                                 </div>*@
+                       
+                            <div class="col-md-5 input-group margin-bottom-sm">
+                                <input type="text" ng-model="searchContact" class="form-control" placeholder="Search" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="show_saveContactModal()">
+                                    <i class="fa fa-plus"></i>
+                                    New Contact
+                                </button>
+                            </div>
+                        </div>
+                        <div ng-show="listContact.length==0 ||listContact.length==null">
+                            <hr />
+                            <p style="text-align:center;">No Contacts found</p>
+
+                        </div>
+                        <div class="card-body table-responsive" style="max-height:250px;" ng-show="listContact.length>0">
+
+                            <table id="example1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>CONTACT NAME</th>
+                                        <th>EMAIL</th>
+                                        <th>WORK PHONE </th>
+                                        <th>MOBILE</th>
+                                        <th>CLIENT NAME</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="co in listContact|filter:{firstName:searchContact}">
+                                        <td><input type="radio" name="contact" ng-checked="co.isChecked" style="cursor:pointer;"
+                                                    ng-click="j.contactId=co.contactId; j.clientId=co.clientId;
+                                                   cr_al='cr';
+                                                   getContact(co.clientId);
+                                                    hide_Modal()" /> </td>
+                                        <td>{{co.firstName}}</td>
+                                        <td>{{co.email}}</td>
+                                        <td>{{co.workPhone}}</td>
+                                        <td>{{co.mobile}}</td>
+                                        <td>{{co.clientName}}</td>
+                                    </tr>
+
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+   <!--modal end get contact-->
+
+
+    <form id="formJobOpeningInfo">
+        <div>
+            <div class="ng-cloak" ng-show="divJOI==0">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;">Create Job Opening</h5>
+                                <div style="float:right; margin-top:-24px;">
+
+                                    <button type="button" ng-click="saveJobOpeningInfo()" class="btn btn-primary btn-sm btn-flat" ng-disabled="btnSave==0">
+
+                                        Save
+                                    </button>
+                                    &nbsp;
+
+                                    <button type="button" ng-click="saveJobOpeningInfo('n')" class="btn btn-default btn-sm btn-flat" ng-disabled="btnSave==0">
+
+                                        Save and New
+                                    </button>
+                                    &nbsp;
+                                    @*<button type="button" ng-click="clear()" class="btn btn-danger btn-sm" ng-disabled="btnSave==0">
+                                            <i class="fa fa-remove"></i>
+                                            Clear
+                                        </button>*@
+                                    <button class="btn btn-danger btn-sm btn-flat" ng-disabled="btnSave==0" ng-click="cancel()">
+                                        <i class="fa fa-remove"></i>
+                                        Cancel
+                                    </button>
+                                    @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Large Modal</button>*@
+                                    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveClientModal" data-whatever="">Open modal formdo</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getClientModal" data-whatever="">Open modal formdo</button>*@
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Position Title</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter Position Tile'] Txtbox" id="pt" ng-model="j.positionTile" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Client Name</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+
+                                    <div class="col-md-4 input-group">
+                                        <select ng-options="c.clientId as c.clientName for c in listClient"
+                                                ng-model="j.clientId"
+                                                class="form-control validate[required,'Please Select Client Name'] Txtbox" id="cn"
+                                                ng-change="getContact(j.clientId); co.clientId=j.clientId;getClient_AccountManager_byClientId();setRecruiterLeadId_and_Recruiter_byClientId();">
+                                            <option value="">Select</option>
+                                        </select>
+
+
+                                        <i class="fa fa-address-card" style="cursor:pointer;" ng-click="show_getClientModal()">
+
+                                        </i>
+
+
+                                    </div>
+
+                                </div>
+                                @*<div class="form-control form-inline">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" ng-repeat="c in listClient |filter:{clientName:j.clientName}">
+                                                {{c.clientName}}
+                                            </li>
+                                        </ul>
+
+                                    </div>*@
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Assigned Team Lead</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control  validate[required,'Please Enter Assigned Team Lead']" id="rId"
+                                                ng-change="getRecruiter_byRecruitmetLeadId('j')"
+                                                ng-options="r.recruitmetLeadId as r.recruitmetLeadName for  r in listRecruitmetLead"
+                                                ng-model="j.recruitmetLeadId">
+                                            
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Assigned Recruiter</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control validate[required,'Please Select Assigned Recruiter']" id="rcId"
+                                                ng-options="rc.recruiterId as rc.recruiterName for  rc in listRecruiter_forJOI"
+                                                ng-model="j.recruiterId">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Target Date</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.targetDT" datepicker readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Job Opening Status</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-model="j.jobOpeningStatus">
+                                            <option value="">Select</option>
+                                            <option value="In Process">In Process</option>
+                                            <option value="Waiting for approval">Waiting for approval</option>
+                                            <option value="ON Hold"> ON Hold </option>
+                                            <option value="Filled">Filled</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                            <option value="Declined">Declined</option>
+                                            <option value="InActive">InActive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Contact Name</span>
+                                    </div>
+                                    <div class="col-md-4 input-group">
+                                        @*<input type="text" class="form-control validate[required,'Please Enter Contact Name'] Txtbox" id="cn" ng-model="j.contactName" maxlength="50" />*@
+                                        <select ng-options="co.contactId as co.firstName for co in listContact_forJobOpen" class="form-control" ng-model="j.contactId" ng-change="setClientId()">
+                                            <option value="">Select</option>
+                                        </select>
+                                        <i class="fa fa-address-book-o" ng-click="show_getContactModal()" style="cursor:pointer;"></i>
+
+
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Account Manager</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @*<input type="text" class="form-control validate[required,'Please Enter Account Manager'] Txtbox" id="am" ng-model="j.accountManager" maxlength="50" />*@
+                                        <select class="form-control" 
+                                                ng-options="am.c_amId  as am.accountManager for   am in listAM"
+                                                ng-model="j.c_amId">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Date Opened</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="hidden" class="form-control"  ng-model="j.openedDT" datepicker readonly="readonly" />
+                                        <input type="text" class="form-control"  ng-model="currentDate"   />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Job Type</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control validate[required,'Please Select Job Type']" id="jobt" ng-model="j.jobType">
+                                            <option value="">Select</option>
+                                            <option value="None">None</option>
+                                            <option value="Full Time">Full Time</option>
+                                            <option value="Part Time">Part Time</option>
+                                            <option value="Temporary">Temporary</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">City</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter City']" id="city" ng-model="j.city" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">State</span>
+                                        <i style="color:red;">*</i>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control validate[required,'Please Enter State']" id="sta" ng-model="j.state" maxlength="50" />
+                                    </div>
+                                </div>
+
+                                <p style="font-weight:bold; padding-left:20px; font-size:20px;"> Work Experience </p>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Min Experience</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.minWorkExperience" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Max Experience</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.maxWorkExperience" maxlength="50" />
+                                    </div>
+                                </div>
+                                <p style="font-weight:bold; padding-left:20px; font-size:20px;"> Salary </p>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Min CTC</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.minCTC" valid-number maxlength="10" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Max CTC</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.maxCTC" valid-number maxlength="10" />
+                                    </div>
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Number Of Positions</span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="j.noOfPositions" maxlength="10" numbers-only />
+                                    </div>
+
+                                </div>
+                                <br />
+                                <h5 style="text-align:center;font-weight: 500;
+    font-family: initial;">
+                                    Job Description
+                                </h5>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-12">
+                                        <textarea class="ckeditor" ck-editor ng-model="j.jobDesc"></textarea>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span style="padding-left:15px;">Job Summery</span>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        @*<input type="file" onchange="angular.element(this).scope().selectFileforUpload(this.files)"/>*@
+                                        <input type="file" id="jobSummeryPhoto" accept=".pdf,.doc"/>
+                                    </div>
+                                    <div class="col-md-1">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="~/Files/{{j.jobSummery}}" ng-show="j.jobSummery!=null && j.jobSummery!=''" download>View Job Summery</a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- /.card-body -->
+                            @*<div class="card-footer" align="center" style="margin-top:40px;">
+                                    &nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" ng-click="saveJobOpeningInfo()" class="btn btn-success btn-sm">
+                                        <i class="fa fa-save"></i>
+                                        Save
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" ng-click="clear()" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-remove"></i>
+                                        Clear
+                                    </button>
+                                </div>*@
+                            <div class="card-header bg-gray-light">
+                                <div style="float:right; margin-top:1px;">
+
+                                    <button type="button" ng-click="saveJobOpeningInfo()" class="btn btn-primary btn-sm btn-flat" ng-disabled="btnSave==0">
+                                        Save
+                                    </button>
+                                    &nbsp;
+
+                                    <button type="button" ng-click="saveJobOpeningInfo('n')" class="btn btn-default btn-sm btn-flat" ng-disabled="btnSave==0">
+                                        Save and New
+                                    </button>
+                                    &nbsp;
+                                    @*<button type="button" ng-click="clear()" class="btn btn-danger btn-sm" ng-disabled="btnSave==0">
+                    <i class="fa fa-remove"></i>
+                    Clear
+                </button>*@
+                                    <button class="btn btn-danger btn-sm btn-flat" ng-disabled="btnSave==0" ng-click="cancel()">
+                                        <i class="fa fa-remove"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card ng-cloak" ng-show="divJOI==1">
+                <div class="card-header bg-gray-light">
+                    <div class="btn-group">
+                        <h5 class="mb-0" style="font-weight:bold;">Job Openings </h5>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-light btn-sm btn-flat" ng-click="editJobOPeningInfo()" ng-disabled="btnEdit==0">Edit</button>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-danger btn-sm btn-flat" ng-disabled="btnDelete==0" ng-click="deleteJobOpeningInfo()">
+                                <i class="fa fa-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+
+                    </div>
+                    <div style="float:right; margin-right:40px; height:30px;">
+                        <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="new()" ng-show="btnNew==1">
+                            <i class="fa fa-plus"></i>
+                            New
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive">
+                    <table class="dataTable table table-bordered table-striped">
+                        <thead> 
+                            <tr>
+                                <th style="width:10px;"><input type="checkbox" ng-model="chkboxHeader" ng-change="allChkboxChecked_UnChecked()" 
+                                           style="cursor:pointer;"/> </th>
+                                <th>Position Title</th>
+                                <th>Assigned Team Lead</th>
+                                <th>Assigned Recruiter</th>
+                                <th>Job Opening Status</th>
+                                <th>Account Manager</th>
+                                <th>No of CV</th>
+                                <th>Job Type</th>
+                                <th>Client Name</th>
+                                <th>Contact Name</th>
+                                @*<th>Action</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="jo in listJobOpeningInfo" ng-show="listJobOpeningInfo.length>0">
+                                <td><input type="checkbox" ng-model="jo.chkbox" ng-change="checkEditDelete()" style="cursor:pointer;" /> </td>
+                                <td>
+                                  <button type="button" ng-click="sendJoiId__To_showJobOpenInfo(jo.joiId)" class="btn btn-link btn-sm">
+                               {{jo.positionTile}}</button>
+                                </td>
+                                <td>{{jo.recruitmetLeadName}}</td>
+                                <td>{{jo.recruiterName}}</td>
+                                <td>{{jo.jobOpeningStatus}}</td>
+                                <td>{{jo.accountManager}}</td>
+                                <td>{{jo.noOfCV}}</td>
+                                <td>{{jo.jobType}}</td>
+                                <td>{{jo.clientName}}</td>
+                                <td>{{jo.contactName}}</td>
+                                @*<td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary btn-sm" ng-click="rowclickJobOPeningInfo()">
+
+                                                <i class="fa fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button type="button" ng-click="deleteJobOpeningInfo()" class="btn btn-danger btn-sm">
+                                                <i class="fa fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>*@
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+                <div ng-hide="listJobOpeningInfo.length>0">
+                    <p style="text-align:center;">
+                        No Record Available.
+
+                    </p>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/Angular/Controller/jobOpeningInfoCtrl.js?v1"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+        <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+        <script>
+                $(".chosen-select").chosen({
+                    no_results_text: "Oops, nothing found!"
+                })
+        </script>*@
+}
+@*<style>
+        .form-group span{text-align:left !important}
+
+    </style>*@
+@*<style>
+
+
+        .form-control{padding:3px !important;border-radius:0;font-size:13px !important}
+        select{padding:3px !important;border-radius:0;font-size:13px !important}
+        span{font-size:15px;}
+        /*span { padding-left:18px;}*/
+    </style>*@
+
+
+@*<style>
+        input type[text] { border: 0px solid #cfcaca; border-bottom-width: 1px; background-color: transparent; }
+    </style>*@
+

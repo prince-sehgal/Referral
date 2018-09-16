@@ -1,0 +1,508 @@
+﻿
+@{
+    ViewBag.Title = "Interviews";
+    Layout = "~/Views/shared/_layout.cshtml";
+}
+
+
+<div ng-controller="interviewsCtrl">
+    <input type="hidden" value="@Request.QueryString["candidateId"]" id="candidateId"/>
+
+    <div class="modal fade" id="saveClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f8f9fa;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Quick Create:Client</h5>
+                    <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @*<div ng-include="'/Templates/Common/client.html'">
+
+                        </div>*@
+
+                    <form id="formModelClient">
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+
+                                <span>Client Name</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="c.clientName" class="form-control validate[required,''] Txtbox" id="mcn" maxlength="50" />
+                            </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Website</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="c.website" class="form-control" maxlength="50" />
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Assigned Team Lead</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <select class="form-control  validate[required,'Please Enter Assigned Team Lead']" id="matl" ng-options="r.recruitmetLeadId as r.recruitmetLeadName for  r in listRecruitmetLead"
+                                        ng-model="c.recruitmetLeadId"
+                                        ng-change="getRecruiter_byRecruitmetLeadId('c')"></select>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Assigned Recruiter</span>
+                                <i style="color:red;">*</i>
+                            </div>
+                            <div class="col-md-9">
+                                <select class="form-control validate[required,'Please Select Assigned Recruiter']" id="mrcId"
+                                        ng-options="rc.recruiterId as rc.recruiterName for  rc in listRecruiter_forCl"
+                                        ng-model="c.recruiterId">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <p style="font-weight:bold; padding-left:10px; font-size:20px;">
+                            Account Manager
+                            &nbsp;&nbsp;&nbsp;
+                            <a style="color:cornflowerblue; cursor:pointer; font-weight:500; font-size:17px;" ng-click="addInlistAccountManager()">+Add Account Manager</a>
+                        </p>
+                        <div style="max-height:150px;" class="table-responsive">
+                            <div ng-repeat="a in listAccountManager track by $index">
+
+                                <div class="form-group form-inline">
+
+                                    <div class="col-md-2">
+                                        <span>Account Manager</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="a.accountManager" maxlength="50" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Contact Number</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" ng-model="a.contactNo" maxlength="15" />
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-danger btn-sm" ng-click="deleteClient_AccountManager(a.c_amId,$index)" ng-disabled="btnSave==0" style="float:right;padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px !important;">
+                                            <i class="fa fa-remove"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div class="form-group form-inline" style="margin-top:20px;">
+                                    <div class="col-md-2">
+                                        <span>Email ID</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" ng-model="a.emailId" maxlength="50" />
+                                    </div>
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>About Company</span>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" ng-model="c.aboutCompany" maxlength="500" />
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="hide_Modal()">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="saveClient('a')">Save and Associate</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="saveClient()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end save modal client-->
+    <!--modal get client-->
+    <div class="modal fade" id="getClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f8f9fa;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-size:x-large;">Quick Create:Client</h5>
+                    <button type="button" class="btn btn-basic" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        @*<div class="input-group margin-bottom-sm">
+                                <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                                <input class="form-control" type="text" placeholder="Email address">
+                            </div>*@
+                        <div class="form-group form-inline">
+                            <div class="col-md-3">
+                                <span>Show:</span>
+                            </div>
+                            <div class="col-md-6 input-group margin-bottom-sm">
+                                <input type="text" ng-model="searchClient" class="form-control" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary btn-sm btn-flat" ng-click="show_saveClientModal()">
+                                    <i class="fa fa-plus"></i>
+                                    New Client
+                                </button>
+                            </div>
+                        </div>
+                        <div ng-show="listClient.length==0 ||listClient.length==null">
+                            <hr />
+                            <p style="text-align:center;">No Client found</p>
+                        </div>
+                        <div class="card-body table-responsive" style="max-height:250px;" ng-show="listClient.length>0">
+
+                            <table id="example1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th> CLIENT NAME</th>
+                                        <th>Team Lead</th>
+                                        <th>Recruiter</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cl in listClient|filter:{clientName:searchClient}">
+                                        <td>
+                                            <input type="radio" name="client" ng-checked="cl.isChecked"
+                                                   ng-click="j.clientId=cl.clientId; co.clientId=cl.clientId; getContact(cl.clientId); hide_Modal()" style="cursor:pointer;" />
+                                        </td>
+                                        <td>{{cl.clientName}}</td>
+                                        <td>{{cl.recruitmetLeadName}}</td>
+                                        <td>{{cl.recruiterName}}</td>
+
+                                    </tr>
+
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal end get client-->
+    <form id="formInterviews">
+        <div>
+            <div class="ng-cloak" ng-show="divInterviews==0">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-outline">
+                            <div class="card-header bg-gray-light">
+                                <h5 class="mb-0" style="font-weight:bold;">Create Interview</h5>
+                                <div style="float:right; margin-top:-24px;">
+
+                                    <button type="button" ng-click="saveInterviews()" class="btn btn-primary btn-sm btn-flat" ng-disabled="btnSave==0">
+
+                                        Save
+                                    </button>
+                                    &nbsp;
+
+                                    <button type="button" ng-click="saveInterviews('n')" class="btn btn-default btn-sm btn-flat" ng-disabled="btnSave==0">
+
+                                        Save and New
+                                    </button>
+                                    &nbsp;
+                                    @*<button type="button" ng-click="clear()" class="btn btn-danger btn-sm" ng-disabled="btnSave==0">
+                                            <i class="fa fa-remove"></i>
+                                            Clear
+                                        </button>*@
+                                    <button class="btn btn-danger btn-sm btn-flat" ng-disabled="btnSave==0" ng-click="cancel()">
+                                        <i class="fa fa-remove"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <div>
+                            </div>
+
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            @*<div ng-include="'/Templates/Common/client.html'">
+
+                                </div>*@
+
+
+                            <!-- /.card-body -->
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Interview Name</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+   <select ng-options="im.imId as  im.interviewName for      im  in listIM" ng-model="i.imId" class="form-control validate[required,''] Txtbox" id="iname">
+
+   </select>                             
+                                </div>
+                                <div class="col-md-2">
+                                    <span>Candidate Name</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <select ng-options="ca.cId as ca.firstName for ca in listCandidates" ng-model="i.candidateId" class="form-control validate[required,''] Txtbox" id="candidate">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Client Name</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4 input-group">
+                                    <select ng-options="c.clientId as c.clientName for c in listClient"
+                                            ng-model="i.clientId"
+                                            class="form-control validate[required,'Please Select Client Name'] Txtbox" id="clientNam"
+                                            ng-change="getJobOpeningInfo_byClientId(); getClient_AccountManager_byClientId(); co.clientId=j.clientId">
+                                        <option value="">Select</option>
+                                    </select>
+
+
+                                    @*<i class="fa fa-address-card" style="cursor:pointer;" ng-click="show_getClientModal()">
+
+                                    </i>*@
+                                  
+                                </div>
+                                <div class="col-md-2">
+                                    <span style="padding-left:15px;">Position Title</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+<select ng-options="j.joiId as j.positionTile for j in listJobOpeningInfo" ng-model="i.joiId" class="form-control validate[required,''] Txtbox" id="jobop">
+    <option value="">Select</option>
+</select>                                    
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span>Interviewer</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control validate[required,''] Txtbox" id="accma"
+                                             ng-options="am.c_amId  as am.accountManager for   am in listAM"
+                                            ng-model="i.c_amId"
+                                            >
+                                        <option value="">Select</option>
+                                    </select>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <span>To</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text"   ng-model="i.toDate" class="form-control validate[required,''] Txtbox" id="da" 
+                                           datepicker  placeholder="Date"/>
+                                    
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" id="tm" ng-model="i.toTime" class="form-control validate[required,''] Txtbox" 
+                                         placeholder="Time"  />
+                                </div>
+
+                            </div>
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span style="padding-left:15px;">Interview Status</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+                                    <select ng-model="i.interviewStatus" class="form-control validate[required,'']" id="ints">
+                                        <option value="None">None</option>
+                                        <option value="Dummy1">Dummy1</option>
+                                        <option value="Dummy2">Dummy2</option>
+                                        <option value="Dummy3">Dummy3</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <span>Location</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="i.location" />
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span style="padding-left:15px;">Interview Owner</span>
+                                    <i style="color:red;">*</i>
+                                </div>
+                                <div class="col-md-4">
+                                 <input type="text"  value="@MySession.userName" class="form-control" disabled="disabled"/>   
+                                </div>
+                                <div class="col-md-2">
+                                    <span>Schedule Comments</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="i.scheduleComments" />
+
+                                </div>
+
+                            </div>
+
+                            <p style="font-weight:bold; padding-left:20px; font-size:20px;">Attachment Information </p>
+                            <div class="form-group form-inline" style="margin-top:20px;">
+                                <div class="col-md-2">
+                                    <span style="padding-left:15px;">Others</span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <input type="file" id="others_Photo_Doc" accept=".pdf,.doc"/>
+                                </div>
+                                <div class="col-md-1">
+
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="~/Files/Interviews/{{i.others_Photo_Doc}}" ng-show="i.others_Photo_Doc!=null && i.others_Photo_Doc!=''" download> View Others </a>
+                               </div>
+
+                            </div>
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card ng-cloak" ng-show="divInterviews==1">
+                <div class="card-header bg-gray-light"> 
+                    <div class="btn-group">
+                        <h5 class="mb-0" style="font-weight:bold;">Interviews</h5>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-light btn-sm btn-flat" ng-click="editInterviews()" ng-disabled="btnEdit==0">Edit</button>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="height:4px;margin-top:-4px;">
+                            <button type="button" class="btn btn-danger btn-sm btn-flat" ng-disabled="btnDelete==0" ng-click="deleteInterviews()">
+                                <i class="fa fa-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+
+                    </div>
+                    <div style="float:right; margin-right:40px; height:30px;">
+                        <button type="button" class="btn btn-default btn-sm btn-flat" ng-click="divInterviews=0" ng-show="btnNew==1">
+                            <i class="fa fa-plus"></i>
+                            New
+                        </button>
+
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive" style="max-height:550px;">
+                    <table  class="dataTable table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:10px;">
+                                    <input type="checkbox" ng-model="chkboxHeader" ng-change="allChkboxChecked_UnChecked()"
+                                           style="cursor:pointer;" />
+                                </th>
+                                <th>Interview Name</th>
+                                <th>Candidate Name</th>
+                                <th>Client Name</th>
+                                <th>Interviewer</th>
+                                <th>To</th>
+                                <th>Interview Status</th>
+                                <th>Others</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="in in listInterviews" ng-show="listInterviews.length>0">
+                                <td>
+                                    <input type="checkbox" ng-model="in.chkbox" ng-change="checkEditDelete()"
+                                           style="cursor:pointer;" />
+                                </td>
+                                <td>{{in.interviewName}}</td>
+                                <td>{{in.candidateName}}</td>
+                                <td>{{in.clientName}}</td>
+                                <td>{{in.accountManager}}</td>
+                                <td>{{in.toDate}} &nbsp;{{in.toTime}}</td>
+                                <td>{{in.interviewStatus}}</td>
+                            <td><a href="~/Files/Interviews/{{in.others_Photo_Doc}}" download 
+                                   ng-show="in.others_Photo_Doc!='' && in.others_Photo_Doc!=null">View Others</a>
+                                <span ng-hide="in.others_Photo_Doc!='' && in.others_Photo_Doc!=null"> No Document Found</span>
+                                 </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+                <div ng-hide="listInterviews.length>0">
+                    <p style="text-align:center;">
+                        No Record Available.
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+    
+<script src="~/Scripts/Angular/Controller/interviewsCtrl.js?v1"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+@*<script src="~/Scripts/TimePicker/lib/bootstrap-datepicker.js"></script>
+<link href="~/Scripts/TimePicker/lib/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/TimePicker/__tests__/timepicker-test.js"></script>
+<script src="~/Scripts/TimePicker/lib/site.js"></script>
+<link href="~/Scripts/TimePicker/lib/site.css" rel="stylesheet" />
+<script src="~/Scripts/TimePicker/jquery.timepicker.js"></script>
+<link href="~/Scripts/TimePicker/jquery.timepicker.css" rel="stylesheet" />*@
+@*<script src="~/plugins/timepicker/bootstrap-timepicker.js"></script>
+<link href="~/plugins/timepicker/bootstrap-timepicker.css" rel="stylesheet" />*@
+    @*<script>
+        $(document).ready(function () {
+
+            $('#tm').timepicker();
+
+        })
+    </script>*@
+}
+<style>
+    span { padding-left: 15px; }
+</style>
+
+
+
+
+
