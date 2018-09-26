@@ -13,7 +13,7 @@
     //$scope.j.contactId = 0;
     $scope.getRecruitmetLead = function () {
         $http.get('/User/getRecruitmetLead').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listRecruitmetLead = response.data.listRecruitmetLead;
             //$scope.j = { recruitmetLeadId: $scope.listRecruitmetLead[0].value };
             $scope.j.recruitmetLeadId = 0;
@@ -24,14 +24,14 @@
     $scope.getRecruiter_byRecruitmetLeadId = function (p) {
         if (p == 'j') {
             $http.get('/JobOpeningInfo/getRecruiter_byRecruitmetLeadId?recruitmetLeadId=' + $scope.j.recruitmetLeadId).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.listRecruiter_forJOI = response.data.listRecruiter;
             }, function (error) {
             })
         }
         else if (p == 'c') {
             $http.get('/JobOpeningInfo/getRecruiter_byRecruitmetLeadId?recruitmetLeadId=' + $scope.c.recruitmetLeadId).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.listRecruiter_forCl = response.data.listRecruiter;
             }, function (error) {
             })
@@ -56,7 +56,7 @@
             j_copy.openedDT = commonService.convertDateStringToDateObj(j_copy.openedDT);
         }
         $http.post('/JobOpeningInfo/saveJobOpeningInfo', { j: j_copy }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.chkboxHeader = false;
             $scope.allChkboxChecked_UnChecked();
             if (response.data.msg == 's') {
@@ -74,8 +74,8 @@
                         headers: { 'Content-Type': undefined },
                         transformRequest: angular.identity
                     }).then(function (resPhoto) {
-                        console.log(resPhoto);
-                        console.log(response);
+                        //console.log(resPhoto);
+                        //console.log(response);
                         if (resPhoto.data.msg == 's') {
                             showSuccessToast("Saved Successfully.");
                             $scope.getJobOpeningInfo();
@@ -125,7 +125,7 @@
     }
     $scope.getJobOpeningInfo = function () {
         $http.get('/JobOpeningInfo/getJobOpeningInfo?clientId=' + 0).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listJobOpeningInfo = response.data.listJobOpeningInfo;
             angular.forEach($scope.listJobOpeningInfo, function (element, index) {
                 element.targetDT = $filter('date')(element.targetDT.slice(6, -2), 'dd-MM-yyyy');
@@ -179,16 +179,16 @@
         angular.forEach($scope.listJobOpeningInfo, function (element, index) {
 
             if (element.chkbox == true) {
-                console.log(Ids);
+                //console.log(Ids);
                 Ids += element.joiId + ',';
             }
         })
         if (Ids.length != 0) {
 
             Ids = Ids.slice(0, -1);
-            console.log(Ids);
+            //console.log(Ids);
             $http.post('/JobOpeningInfo/deleteJobOpeningInfo', { joiIds: Ids }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.getJobOpeningInfo();
                 $scope.chkboxHeader = false;
                 $scope.allChkboxChecked_UnChecked();
@@ -263,7 +263,7 @@
         }
 
         $http.post('/Client/saveClient', { c: $scope.c, listAccountManager: $scope.listAccountManager }).then(function (response) {
-            console.log(response);
+            //console.log(response);
 
             $scope.chkboxHeader = false;
             $scope.allChkboxChecked_UnChecked();
@@ -297,7 +297,7 @@
     }
     $scope.getClient = function (p) {
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
 
         }, function (error) {
@@ -347,7 +347,7 @@
         //}
 
         $http.post('/Contact/saveContact', { co: $scope.co }).then(function (response) {
-            console.log(response);
+            //console.log(response);
 
 
             if (response.data.msg = 's') {
@@ -398,7 +398,9 @@
         }
 
         $scope.co.clientId = $scope.j.clientId;
-        $scope.getClient_AccountManager_byClientId();
+        if ($scope.j.clientId != undefined) {
+            $scope.getClient_AccountManager_byClientId();
+        }
 
         angular.forEach($scope.listClient, function (element, index) {
             if (element.clientId == $scope.j.clientId) {
@@ -410,7 +412,7 @@
         })
         var tempClienId = 0;
         $http.get('/Contact/getContact?clientId=' + clientId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listContact = response.data.listContact;
             if ($scope.j.contactId > 0) {
                 angular.forEach($scope.listContact, function (element, index) {
@@ -428,15 +430,13 @@
             $scope.j.clientId = 0;
         }
         $http.get('/Contact/getContact?clientId=' + $scope.j.clientId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listContact_forJobOpen = response.data.listContact;
         }, function (error) {
         })
-
-
-
-
+        $scope.removeErrorClass();
     }
+
     $scope.setClientId = function () {
         angular.forEach($scope.listContact, function (element, index) {
             debugger;
@@ -460,7 +460,7 @@
         $scope.listAccountManager.splice(index, 1);
         if (c_amId != undefined) {
             $http.get('/Client/deleteClient_AccountManager?c_amId=' + c_amId + '&clientId=' + $scope.clientId).then(function (response) {
-                console.log(response);
+                //console.log(response);
 
             }, function (error) {
             })
@@ -474,17 +474,19 @@
     var joiId;
     joiId = $('#joiId').val();
     $scope.getJobOpeningInfo_byJoiId = function () {
-        $http.get('/JobOpeningInfo/getJobOpeningInfo_byJoiId?joiId=' + joiId).then(function (response) {
-            console.log(response);
-            $scope.j = response.data.j;
-            if ($scope.j.targetDT != null && $scope.j.targetDT != undefined && $scope.j.targetDT != '') {
-                $scope.j.targetDT = $filter('date')($scope.j.targetDT.slice(6, -2), 'dd-MM-yyyy');
-            }
-            //if ($scope.j.openedDT != null && $scope.j.openedDT != undefined && $scope.j.openedDT != '') {
-            //    $scope.j.openedDT = $filter('date')($scope.j.openedDT.slice(6, -2), 'dd-MM-yyyy');
-            //}
-        }, function (error) {
-        })
+        if (joiId != undefined) {
+            $http.get('/JobOpeningInfo/getJobOpeningInfo_byJoiId?joiId=' + joiId).then(function (response) {
+                //console.log(response);
+                $scope.j = response.data.j;
+                if ($scope.j.targetDT != null && $scope.j.targetDT != undefined && $scope.j.targetDT != '') {
+                    $scope.j.targetDT = $filter('date')($scope.j.targetDT.slice(6, -2), 'dd-MM-yyyy');
+                }
+                //if ($scope.j.openedDT != null && $scope.j.openedDT != undefined && $scope.j.openedDT != '') {
+                //    $scope.j.openedDT = $filter('date')($scope.j.openedDT.slice(6, -2), 'dd-MM-yyyy');
+                //}
+            }, function (error) {
+            })
+        }
     }
     $scope.cancel = function () {
         $scope.clearJobOpeningInfo();
@@ -494,7 +496,7 @@
 
     $scope.getClient_AccountManager_byClientId = function () {
         $http.get('/Interviews/getClient_AccountManager_byClientId?clientId=' + $scope.j.clientId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listAM = response.data.listAM;
 
         }, function (error) {
@@ -535,7 +537,7 @@
 
     $scope.setRecruiterLeadId_and_Recruiter_byClientId = function () {
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
 
             angular.forEach($scope.listClient, function (element, index) {
@@ -551,17 +553,29 @@
         })
 
     }
+    $scope.removeErrorClass = function () {
+        if ($scope.j.clientId != undefined && $scope.j.clientId != '' && $scope.j.clientId != null) {
+            $('#cn').removeClass('error');
+            $('#rId').removeClass('error');
+            $('#rcId').removeClass('error');
+        }
+        //if ($scope.j.recruitmetLeadId != undefined && $scope.j.recruitmetLeadId != '' && $scope.j.recruitmetLeadId != null) {
+        //    alert('rid');
+        //    $('#rId').removeClass('error');
+        //}
+        //if ($scope.j.recruiterId != undefined && $scope.j.recruiterId != '' && $scope.j.recruiterId != null) {
+        //    $('#rcId').removeClass('error');
+        //}
+
+    }
     $scope.currentDate = new Date();
     $scope.currentDate = $filter('date')($scope.currentDate, 'dd-MMM-yyyy');
+
 
     $scope.getRecruitmetLead();
     $scope.getJobOpeningInfo();
     $scope.getClient();
     $scope.getContact(null);
     $scope.getJobOpeningInfo_byJoiId();
-
-
-
-
 
 })

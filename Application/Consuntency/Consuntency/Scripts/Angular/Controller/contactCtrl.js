@@ -16,7 +16,7 @@
         }
         $scope.btnSave = 0;
         $http.post('/Contact/saveContact', { co: $scope.co }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             
             $scope.chkboxHeader = false;
             $scope.allChkboxChecked_UnChecked();
@@ -51,7 +51,7 @@
         //}
 
         $http.get('/Contact/getContact?clientId='+0).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listContact = response.data.listContact;
             commonService.setTimeout_OnDatatable();
             //if (response.data.msg == 's') {
@@ -90,16 +90,16 @@
         angular.forEach($scope.listContact, function (element, index) {
 
             if (element.chkbox == true) {
-                console.log(Ids);
+                //console.log(Ids);
                 Ids += element.contactId + ',';
             }
         })
         if (Ids.length != 0) {
 
             Ids = Ids.slice(0, -1);
-            console.log(Ids);
+            //console.log(Ids);
             $http.post('/Contact/deleteContact', { contactIds: Ids }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.chkboxHeader = false;
                 $scope.allChkboxChecked_UnChecked();
                 $scope.getContact();
@@ -164,7 +164,7 @@
     $scope.getClient = function (p) {
 
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
     
         }, function (error) {

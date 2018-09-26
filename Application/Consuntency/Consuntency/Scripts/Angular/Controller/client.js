@@ -14,7 +14,7 @@
         }
         $scope.btnSave = 0;
         $http.post('/Client/saveClient', { c: $scope.c, listAccountManager: $scope.listAccountManager }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.chkboxHeader = false;
             $scope.allChkboxChecked_UnChecked();
             $scope.getClient();
@@ -50,7 +50,7 @@
         //}
 
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
             $scope.listAM = response.data.listAM;
             commonService.setTimeout_OnDatatable();
@@ -59,7 +59,7 @@
     };
     //$scope.getClient_AccountManager = function (p) {
     //    $http.get('/Client/getClient_AccountManager').then(function (response) {
-    //        console.log(response);
+    //        //console.log(response);
     //        $scope.listAM = response.data.listAM;
     //    }, function (error) {
     //    })
@@ -70,7 +70,7 @@
             if (element.clientId == clientId) {
                 $scope.temp_listAM.push(element);
                 debugger;
-                console.log(element);
+                //console.log(element);
             }
 
         })
@@ -98,7 +98,7 @@
                     if (element.clientId == $scope.c.clientId) {
                         $scope.listAccountManager.push(element);
                         debugger;
-                        console.log(element);
+                        //console.log(element);
                     }
 
                 })
@@ -111,7 +111,7 @@
     }
     $scope.getRecruitmetLead = function () {
         $http.get('/User/getRecruitmetLead').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listRecruitmetLead = response.data.listRecruitmetLead;
         }, function (error) {
         })
@@ -122,16 +122,16 @@
         angular.forEach($scope.listClient, function (element, index) {
 
             if (element.chkbox == true) {
-                console.log(Ids);
+                //console.log(Ids);
                 Ids += element.clientId + ',';
             }
         })
         if (Ids.length != 0) {
 
             Ids = Ids.slice(0, -1);
-            console.log(Ids);
+            //console.log(Ids);
             $http.post('/Client/deleteClient', { clientIds: Ids }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.chkboxHeader = false;
                 $scope.allChkboxChecked_UnChecked();
                 $scope.getClient();
@@ -194,7 +194,7 @@
     }
     $scope.getRecruiter_byRecruitmetLeadId = function () {
         $http.get('/JobOpeningInfo/getRecruiter_byRecruitmetLeadId?recruitmetLeadId=' + $scope.c.recruitmetLeadId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listRecruiter = response.data.listRecruiter;
         }, function (error) {
         })
@@ -210,7 +210,7 @@
    $scope.deleteClient_AccountManager = function (c_amId,index) {
        if (c_amId != undefined) {
            $http.get('/Client/deleteClient_AccountManager?c_amId=' + c_amId + '&clientId=' + $scope.c.clientId).then(function (response) {
-               console.log(response);
+               //console.log(response);
                if (response.data.msg == 's') {
                    $scope.listAccountManager.splice(index, 1);
                    //showSuccessToast("Delete Successfully.");

@@ -30,7 +30,7 @@
             return false;
         }
         $http.post('/User/checkExistsEmailId_MobileNo', { u: $scope.u }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             errMsg = '';
             if( response.data.firstNameStatus == 1)
             {
@@ -55,7 +55,7 @@
                else if (v == 0) {
                    $scope.btnSave = 0;
                     $http.post('/User/saveUser', { u: $scope.u }).then(function (response) {
-                        console.log(response);
+                        //console.log(response);
                         $scope.chkboxHeader = false;
                         $scope.allChkboxChecked_UnChecked();
                         $scope.getUser();
@@ -92,7 +92,7 @@
 
     $scope.getUser = function () {
         $http.get('/User/getUser').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listUser = response.data.listUser;
             $scope.u.status = "Active";
             commonService.setTimeout_OnDatatable();
@@ -137,7 +137,7 @@
     //}
     $scope.getRecruitmetLead = function () {
         $http.get('/User/getRecruitmetLead').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listRecruitmetLead = response.data.listRecruitmetLead;
         }, function (error) {
         })
@@ -179,16 +179,16 @@
         angular.forEach($scope.listUser, function (element, index) {
 
             if (element.chkbox == true) {
-                console.log(Ids);
+                //console.log(Ids);
                 Ids += element.userId + ',';
             }
         })
         if (Ids.length != 0) {
 
             Ids = Ids.slice(0, -1);
-            console.log(Ids);
+            //console.log(Ids);
             $http.post('/User/deleteUser', { userIds: Ids }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.getUser();
                 $scope.chkboxHeader = false;
                 $scope.allChkboxChecked_UnChecked();

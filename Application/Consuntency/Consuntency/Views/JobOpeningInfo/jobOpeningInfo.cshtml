@@ -192,7 +192,7 @@
                                     <tr ng-repeat="cl in listClient|filter:{clientName:searchClient}">
                                         <td>
                                             <input type="radio" name="client"  ng-checked="cl.isChecked"
-                                                    ng-click="j.clientId=cl.clientId; co.clientId=cl.clientId; getContact(cl.clientId); hide_Modal();setRecruiterLeadId_and_Recruiter_byClientId();" style="cursor:pointer;"/> 
+                                                    ng-click="j.clientId=cl.clientId; co.clientId=cl.clientId; getContact(cl.clientId); hide_Modal();setRecruiterLeadId_and_Recruiter_byClientId();removeErrorClass();" style="cursor:pointer;"/> 
                                             @*{{cl.isChecked}}*@
                                         </td>
                                         <td>{{cl.clientName}}</td>

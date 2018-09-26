@@ -11,14 +11,14 @@
 
     $scope.getQualification = function () {
         $http.get('/Candidates/getQualification').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listQualification = response.data.listQualification;
         }, function (error) {
         })
     }
     $scope.getCandidateStatusCat_SubCat = function () {
         $http.get('/Candidates/getCandidateStatusCat_SubCat').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listCSCat_SubCat = response.data.listCSCat_SubCat;
 
             //for associate job opening
@@ -37,14 +37,14 @@
     }
     $scope.getSource = function () {
         $http.get('/Candidates/getSource').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listSource = response.data.listSource;
         }, function (error) {
         })
     }
     $scope.getRecruiter = function () {
         $http.get('/Candidates/getRecruiter').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listRecruiter = response.data.listRecruiter;
         }, function (error) {
         })
@@ -60,8 +60,8 @@
             return false;
         }
         $http.post('/Candidates/check_Candidate_Exists_EmailId_MobileNo', { c: $scope.c }).then(function (response) {
-            console.log(response);
-            console.log(errMsg);
+            //console.log(response);
+            //console.log(errMsg);
 
             if (response.data.emailStatus == 1 || response.data.mobileStatus == 1) {
                 if (response.data.emailStatus == 1 && response.data.mobileStatus == 1) {
@@ -85,7 +85,7 @@
             else {
         $scope.btnSave = 0;
         $http.post('/Candidates/saveCandidates', { c: $scope.c, listEduDetail: $scope.listEduDetail, listExpDetail: $scope.listExpDetail }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             if (response.data.msg == 's') {
                 $scope.c.recruiterId = 0;
                 $scope.c.sourceId = 0;
@@ -111,8 +111,8 @@
                         headers: { 'Content-Type': undefined },
                         transformRequest: angular.identity
                     }).then(function (resPhoto) {
-                        console.log(resPhoto);
-                        console.log(response);
+                        //console.log(resPhoto);
+                        //console.log(response);
                         if (resPhoto.data.msg == 's') {
                             showSuccessToast("Saved Successfully.");
                             $scope.getCandidates();
@@ -174,7 +174,7 @@
     }
     $scope.getCandidates = function () {
         $http.get('/Candidates/getCandidates').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listCandidates = response.data.listCandidates;
             commonService.setTimeout_OnDatatable();
         }, function (error) {
@@ -202,7 +202,7 @@
         })
         $scope.divCandidate = 0;
         $http.get('/Candidates/getEducationDetails_And_ExperienceDetails_byCId?cId='+$scope.c.cId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listEduDetail = response.data.listEduDetail;
             $scope.listExpDetail = response.data.listExpDetail;
 
@@ -214,16 +214,16 @@
         angular.forEach($scope.listCandidates, function (element, index) {
 
             if (element.chkbox == true) {
-                console.log(Ids);
+                //console.log(Ids);
                 Ids += element.cId + ',';
             }
         })
         if (Ids.length != 0) {
 
             Ids = Ids.slice(0, -1);
-            console.log(Ids);
+            //console.log(Ids);
             $http.post('/Candidates/deleteCandidates', { cIds: Ids }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.btnDelete = 1;
                 $scope.getCandidates();
                 $scope.chkboxHeader = false;
@@ -269,7 +269,7 @@
     $scope.addInListEduDetails = function () {
         $scope.listEduDetail.push(ed);
         ed = {};
-        console.log($scope.listEduDetail);
+        //console.log($scope.listEduDetail);
     }
     var ex = {};
     ex.occupation = '';
@@ -284,7 +284,7 @@
     $scope.addInListExpDetails = function () {
         $scope.listExpDetail.push(ex);
         ex = {};
-        console.log($scope.listExpDetail);
+        //console.log($scope.listExpDetail);
     }
     $scope.createYear = function () {
         var date = new Date();
@@ -301,7 +301,7 @@
         
             $scope.listYear.push(year);
         }
-        console.log($scope.listYear);
+        //console.log($scope.listYear);
 
     }
     $scope.createMonth = function () {
@@ -319,7 +319,7 @@
         $scope.listMonth.push("Nov");
         $scope.listMonth.push("Dec");
         
-        console.log($scope.listMonth);
+        //console.log($scope.listMonth);
 
 
     }
@@ -358,7 +358,7 @@
         $scope.listEduDetail.splice(index,1);
         if (angular.isDefined(eduId)) {
             $http.get('/Candidates/deleteEducationDetails?eduId=' + eduId).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.getCandidates();
             }, function (error) {
             })
@@ -369,7 +369,7 @@
         $scope.listExpDetail.splice(index, 1);
         if (angular.isDefined(eduId)) {
             $http.get('/Candidates/deleteExperienceDetails?expId=' + expId).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.getCandidates();
             }, function (error) {
             })
@@ -379,7 +379,7 @@
     $scope.getClient = function () {
         
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
 
         }, function (error) {
@@ -387,11 +387,15 @@
     }
     $scope.getJobOpeningInfo = function () {
         $http.get('/JobOpeningInfo/getJobOpeningInfo?clientId='+$scope.clientId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listJobOpeningInfo = response.data.listJobOpeningInfo;
             angular.forEach($scope.listJobOpeningInfo, function (element, index) {
-                element.targetDT = $filter('date')(element.targetDT.slice(6, -2), 'dd-MM-yyyy');
-                element.openedDT = $filter('date')(element.openedDT.slice(6, -2), 'dd-MM-yyyy');
+                if (element.targetDT != null && element.targetDT != undefined && element.targetDT != '') {
+                    element.targetDT = $filter('date')(element.targetDT.slice(6, -2), 'dd-MM-yyyy');
+                }
+                if (element.openedDT != null && element.openedDT != undefined && element.openedDT != '') {
+                    element.openedDT = $filter('date')(element.openedDT.slice(6, -2), 'dd-MM-yyyy');
+                }
             })
         }, function (error) {
         })
@@ -432,7 +436,7 @@
         cIds = $('#candidateIds').val();
         alert(cIds);
         $http.post('/Candidates/updateCandidateStatus', {candidateIds:cIds, joiId: $scope.joiId, comments: $scope.comments, csSubCatId:$scope.csSubCatId }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             if (response.data.msg == 's') {
                 showSuccessToast("Saved Successfully.");
                 window.location = "/Candidates/candidates";
@@ -490,7 +494,7 @@
     }
     $scope.getAssociateJob_To_Candidate_byCandidateId = function (candidateId) {
         $http.get('/AssociateJobToCandidate/getAssociateJob_To_Candidate_byCandidateId?candidateId=' + candidateId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listAJC = response.data.listAJC;
           
         }, function (error) {
@@ -503,21 +507,23 @@
     }
     var candidateId=$('#candidateId').val();
     $scope.getCandidates_byCandidateId = function () {
+        if (candidateId != undefined) {
 
-        $http.get('/Candidates/getCandidates_byCandidateId?candidateId=' + candidateId).then(function (response) {
-            console.log("hello");
-            console.log(response);
-            $scope.c = response.data.c;
+            $http.get('/Candidates/getCandidates_byCandidateId?candidateId=' + candidateId).then(function (response) {
+                //console.log("hello");
+                //console.log(response);
+                $scope.c = response.data.c;
 
-            $http.get('/Candidates/getEducationDetails_And_ExperienceDetails_byCId?cId=' + $scope.c.cId).then(function (response) {
-                console.log(response);
-                $scope.listEduDetail = response.data.listEduDetail;
-                $scope.listExpDetail = response.data.listExpDetail;
+                $http.get('/Candidates/getEducationDetails_And_ExperienceDetails_byCId?cId=' + $scope.c.cId).then(function (response) {
+                    //console.log(response);
+                    $scope.listEduDetail = response.data.listEduDetail;
+                    $scope.listExpDetail = response.data.listExpDetail;
 
+                }, function (error) {
+                })
             }, function (error) {
             })
-        }, function (error) {
-        })
+        }
     }
     $scope.uploadResume = function () {
 
@@ -536,7 +542,7 @@
                 headers: { 'Content-Type': undefined },
                 transformRequest: angular.identity
             }).then(function (resPhoto) {
-                console.log(resPhoto);
+                //console.log(resPhoto);
                 if (resPhoto.data.msg == 's') {
                     showSuccessToast("Upload Successfully.");
                     $scope.getCandidates_byCandidateId();
@@ -578,7 +584,7 @@
                 $scope.hideModalChangeStatus();
             }
         }, function (error) {
-            console.log(error);
+            //console.log(error);
 
         })
     }
@@ -586,14 +592,18 @@
         $('#ModalChangeStatus').modal('hide');
     }
     $scope.getInterviews_byCandidateId = function () {
-        $http.get('/Candidates/getInterviews_byCandidateId?candidateId=' + candidateId).then(function (response) {
-            console.log(response);
-            $scope.listInterviews = response.data.listInterviews;
-            angular.forEach($scope.listInterviews, function (element, index) {
-                element.toDate = $filter('date')(element.toDate.slice(6, -2), 'dd-MM-yyyy');
+        if (candidateId != undefined) {
+            $http.get('/Candidates/getInterviews_byCandidateId?candidateId=' + candidateId).then(function (response) {
+                //console.log(response);
+                $scope.listInterviews = response.data.listInterviews;
+                angular.forEach($scope.listInterviews, function (element, index) {
+                    if (element.toDate != null) {
+                        element.toDate = $filter('date')(element.toDate.slice(6, -2), 'dd-MM-yyyy');
+                    }
+                })
+            }, function (error) {
             })
-        }, function (error) {
-        })
+        }
     }
     //var resume = "";
 

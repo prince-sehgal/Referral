@@ -5,7 +5,7 @@
     //$scope.j = {};
     //$scope.getJobOpeningInfo_byJoiId = function () {
     //    $http.get('/JobOpeningInfo/getJobOpeningInfo_byJoiId?joiId=' +joiId).then(function (response) {
-    //        console.log(response);
+    //        //console.log(response);
     //        $scope.j = response.data.j;
     //        if ($scope.j.targetDT != null && $scope.j.targetDT != undefined && $scope.j.targetDT != '') {
     //            $scope.j.targetDT = $filter('date')($scope.j.targetDT.slice(6, -2), 'dd-MM-yyyy');
@@ -21,10 +21,12 @@
 
     $scope.getJobOpeningInfo_Not_AlreadyTag_OnSameCandidate = function () {
         $http.get('/AssociateJobToCandidate/getJobOpeningInfo_Not_AlreadyTag_OnSameCandidate?clientId=' + $scope.clientId+'&candidateIds='+ $('#candidateIds').val()).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listJobOpeningInfo = response.data.listJobOpeningInfo;
             angular.forEach($scope.listJobOpeningInfo, function (element, index) {
-                element.targetDT = $filter('date')(element.targetDT.slice(6, -2), 'dd-MM-yyyy');
+                if (element.targetDT != null && element.targetDT != undefined && element.targetDT != '') {
+                    element.targetDT = $filter('date')(element.targetDT.slice(6, -2), 'dd-MM-yyyy');
+                }
                 //element.openedDT = $filter('date')(element.openedDT.slice(6, -2), 'dd-MM-yyyy');
             })
         }, function (error) {
@@ -62,7 +64,7 @@
         //if (listJoiIds.length > 0)
         //{
             $http.post('/AssociateJobToCandidate/saveAssociateJob_To_Candidate', { listCandidateIds: listCandidateIds, listJoiIds: listJoiIds, comments: $scope.comments, csSubCatId: $scope.csSubCatId }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 if (response.data.msg == 's') {
                     showSuccessToast("Saved Successfully.");
                     window.location = "/JobOpeningInfo/JobOpeningInfo";
@@ -94,7 +96,7 @@
     $scope.getClient = function () {
 
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
 
         }, function (error) {
@@ -102,7 +104,7 @@
     }
     $scope.getCandidateStatusCat_SubCat = function () {
         $http.get('/Candidates/getCandidateStatusCat_SubCat').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listCSCat_SubCat = response.data.listCSCat_SubCat;
             angular.forEach($scope.listCSCat_SubCat, function (element, index) {
                 if (element.csSubCat == "Associated") {
@@ -136,7 +138,7 @@
 
     $scope.getCandidates_Not_AlreadyTag_OnSamePosition = function () {
         $http.get('/AssociateJobToCandidate/getCandidates_Not_AlreadyTag_OnSamePosition?joiId=' + $('#joiIds').val()).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listCandidates = response.data.listCandidates;
 
         }, function (error) {
@@ -184,6 +186,5 @@
     $scope.getClient();
     $scope.getCandidateStatusCat_SubCat();
     $scope.getCandidates_Not_AlreadyTag_OnSamePosition();
-    
 
 })

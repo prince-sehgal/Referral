@@ -12,14 +12,14 @@
      
 
         $http.get('/Client/getClient').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listClient = response.data.listClient;
         }, function (error) {
         })
     }
     $scope.getCandidates = function () {
         $http.get('/Candidates/getCandidates').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listCandidates = response.data.listCandidates;
              if($('#candidateId').val()>0)
              {
@@ -40,7 +40,7 @@
     }
     $scope.getJobOpeningInfo_byClientId = function () {
         $http.get('/JobOpeningInfo/getJobOpeningInfo?clientId=' + $scope.i.clientId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listJobOpeningInfo = response.data.listJobOpeningInfo;
             angular.forEach($scope.listJobOpeningInfo, function (element, index) {
                 element.targetDT = $filter('date')(element.targetDT.slice(6, -2), 'dd-MM-yyyy');
@@ -53,7 +53,7 @@
 
     $scope.getClient_AccountManager_byClientId = function () {
         $http.get('/Interviews/getClient_AccountManager_byClientId?clientId=' + $scope.i.clientId).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listAM = response.data.listAM;
             
         }, function (error) {
@@ -61,7 +61,7 @@
     }
     $scope.getInterviewName = function () {
         $http.get('/Interviews/getInterviewName').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listIM = response.data.listIM;
 
         }, function (error) {
@@ -86,7 +86,7 @@
             i_copy.toDate = commonService.convertDateStringToDateObj(i_copy.toDate);
         }
         $http.post('/Interviews/saveInterviews', { i: i_copy }).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.chkboxHeader = false;
             $scope.allChkboxChecked_UnChecked();
             if (response.data.msg == 's') {
@@ -104,7 +104,7 @@
                         headers: { 'Content-Type': undefined },
                         transformRequest: angular.identity
                     }).then(function (resPhoto) {
-                        console.log(resPhoto);
+                        //console.log(resPhoto);
                         if (resPhoto.data.msg == 's') {
                             showSuccessToast("Saved Successfully.");
                             $scope.getInterviews();
@@ -165,10 +165,12 @@
 
     $scope.getInterviews = function () {
         $http.get('/Interviews/getInterviews').then(function (response) {
-            console.log(response);
+            //console.log(response);
             $scope.listInterviews = response.data.listInterviews;
             angular.forEach($scope.listInterviews, function (element, index) {
-                element.toDate = $filter('date')(element.toDate.slice(6, -2), 'dd-MM-yyyy');
+                if (element.toDate != null && element.toDate != undefined && element.toDate != '') {
+                    element.toDate = $filter('date')(element.toDate.slice(6, -2), 'dd-MM-yyyy');
+                }
             })
             commonService.setTimeout_OnDatatable();
         }, function (error) {
@@ -240,9 +242,9 @@
         if (Ids.length != 0) {
 
             Ids = Ids.slice(0, -1);
-            console.log(Ids);
+            //console.log(Ids);
             $http.post('/Interviews/deleteInterviews', { interviewIds: Ids }).then(function (response) {
-                console.log(response);
+                //console.log(response);
                 $scope.getInterviews();
                 $scope.chkboxHeader = false;
                 $scope.allChkboxChecked_UnChecked();
